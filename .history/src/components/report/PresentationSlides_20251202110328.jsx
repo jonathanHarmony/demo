@@ -1152,40 +1152,31 @@ export default function PresentationSlides({ slideIndex }) {
         ];
         const maxValue = Math.max(...compareData.map(d => Math.max(d.r, d.c)));
         return (
-          <div className="h-full p-6 flex flex-col bg-white">
-            <h2 className="text-2xl font-bold mb-4 text-center text-harmonyDark">סיכום השוואתי: שתי קטגוריות שונות בתודעת הצרכן</h2>
-            <div className="flex-1 flex items-center justify-center overflow-auto">
-              <div className="w-full max-w-6xl px-4">
-                {/* Header Row */}
-                <div className="grid grid-cols-[2fr_1.5fr_2fr] gap-6 mb-4 pb-3 border-b-2 border-gray-200">
-                   <div className="text-right text-xl font-bold text-[#0F1C2E]">Remilk</div>
-                   <div className="text-center text-xl font-bold text-gray-700">נושא</div>
-                   <div className="text-left text-xl font-bold text-[#3CC4C7]">Cowfree</div>
+          <div className="h-full p-8 flex flex-col">
+            <h2 className="text-3xl font-bold mb-6 text-center text-harmonyDark">סיכום השוואתי: שתי קטגוריות שונות בתודעת הצרכן</h2>
+            <div className="flex-grow flex justify-center items-center">
+              <div className="w-full max-w-5xl">
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-4 font-bold text-lg mb-6 text-center">
+                   <div className="text-harmonyDark">Remilk</div>
+                   <div className="px-8">נושא</div>
+                   <div className="text-harmonyTurquoise">Cowfree</div>
                 </div>
-                
-                {/* Data Rows */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {compareData.map((row, i) => (
-                    <div key={i} className="grid grid-cols-[2fr_1.5fr_2fr] gap-6 items-center py-3">
-                      {/* Left: Remilk */}
-                      <div className="flex items-center justify-end gap-3">
-                         <span className="text-lg font-bold text-[#0F1C2E] min-w-[3rem] text-right">{row.r}</span>
-                         <div 
-                           className="h-8 bg-[#0F1C2E] rounded-md shadow-sm" 
-                           style={{width: `${Math.max((row.r / maxValue) * 100, 5)}%`}}
-                         ></div>
+                    <div key={i} className={`grid grid-cols-[1fr_auto_1fr] gap-4 items-center p-4 rounded-lg ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                      {/* Left Bar Remilk */}
+                      <div className="flex justify-end items-center gap-3">
+                         <span className="text-base font-bold text-harmonyDark min-w-[3rem] text-right">{row.r}</span>
+                         <div className="h-6 bg-harmonyDark rounded-full transition-all" style={{width: `${(row.r / maxValue) * 100}%`, minWidth: '20px'}}></div>
                       </div>
                       
-                      {/* Center: Theme */}
-                      <div className="text-center font-bold text-gray-800 text-lg">{row.theme}</div>
+                      {/* Center Text */}
+                      <div className="text-center font-semibold text-gray-700 text-base px-6 min-w-[8rem]">{row.theme}</div>
 
-                      {/* Right: Cowfree */}
-                      <div className="flex items-center justify-start gap-3">
-                         <div 
-                           className="h-8 bg-[#3CC4C7] rounded-md shadow-sm" 
-                           style={{width: `${Math.max((row.c / maxValue) * 100, 5)}%`}}
-                         ></div>
-                         <span className="text-lg font-bold text-[#3CC4C7] min-w-[3rem] text-left">{row.c}</span>
+                      {/* Right Bar Cowfree */}
+                      <div className="flex justify-start items-center gap-3">
+                         <div className="h-6 bg-harmonyTurquoise rounded-full transition-all" style={{width: `${(row.c / maxValue) * 100}%`, minWidth: '20px'}}></div>
+                         <span className="text-base font-bold text-teal-600 min-w-[3rem] text-left">{row.c}</span>
                       </div>
                     </div>
                   ))}
@@ -1198,44 +1189,44 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 20 (Was 18): WHAT → SO WHAT → NOW WHAT
       case 20:
         return (
-          <div className="h-full px-6 py-5 flex flex-col overflow-hidden">
-            <h2 className="text-3xl font-bold mb-4 text-center text-harmonyDark">מפת דרכים אסטרטגית: שני מותגים, שני נתיבים להצלחה</h2>
+          <div className="h-full px-8 py-6 flex flex-col">
+            <h2 className="text-4xl font-bold mb-6 text-center text-harmonyDark">מפת דרכים אסטרטגית: שני מותגים, שני נתיבים להצלחה</h2>
             
-            <div className="grid grid-cols-2 gap-6 flex-grow overflow-auto">
+            <div className="grid grid-cols-2 gap-8 flex-grow">
               
               {/* Remilk Column */}
-              <div className="flex flex-col gap-3 border-l-4 border-[#0F1C2E] pl-4">
-                <div className="flex items-center gap-2 text-[#0F1C2E] mb-1">
-                  <div className="bg-[#0F1C2E] text-white p-1.5 rounded-lg"><Atom size={24}/></div>
-                  <h3 className="text-2xl font-bold">Remilk</h3>
+              <div className="flex flex-col gap-4 border-l-4 border-[#0F1C2E] pl-6">
+                <div className="flex items-center gap-3 text-[#0F1C2E] mb-2">
+                  <div className="bg-[#0F1C2E] text-white p-2 rounded-lg"><Atom size={28}/></div>
+                  <h3 className="text-3xl font-bold">Remilk</h3>
                 </div>
                 
                 {/* Status */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                   <h4 className="flex items-center gap-2 font-bold text-base text-gray-700 mb-1.5">
-                     <Map size={16}/> הסטטוס הנוכחי
+                <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                   <h4 className="flex items-center gap-2 font-bold text-lg text-gray-700 mb-2">
+                     <Map size={18}/> הסטטוס הנוכחי
                    </h4>
-                   <p className="text-base font-medium leading-relaxed">
+                   <p className="text-xl font-medium leading-relaxed">
                      נתפסת כחברת טכנולוגיה עילית ("הסטארט-אפ של החלב"). נהנית מגאווה ישראלית ושיח אידיאולוגי עמוק.
                    </p>
                 </div>
 
                 {/* Challenge */}
-                <div className="bg-red-50 p-4 rounded-xl border border-red-100">
-                   <h4 className="flex items-center gap-2 font-bold text-base text-red-800 mb-1.5">
-                     <AlertTriangle size={16}/> האתגר המרכזי
+                <div className="bg-red-50 p-5 rounded-xl border border-red-100">
+                   <h4 className="flex items-center gap-2 font-bold text-lg text-red-800 mb-2">
+                     <AlertTriangle size={18}/> האתגר המרכזי
                    </h4>
-                   <p className="text-base font-medium leading-relaxed text-red-900">
+                   <p className="text-xl font-medium leading-relaxed text-red-900">
                      "מחסום המעבדה". הפחד הפסיכולוגי ממוצר שנתפס כ"לא טבעי", "כימי" או "מהונדס" חוסם אימוץ המוני.
                    </p>
                 </div>
 
                 {/* Action Plan */}
-                <div className="bg-[#0F1C2E] p-4 rounded-xl text-white mt-auto">
-                   <h4 className="flex items-center gap-2 font-bold text-base text-blue-200 mb-1.5">
-                     <ArrowRight size={16}/> הפעולה הנדרשת
+                <div className="bg-[#0F1C2E] p-5 rounded-xl text-white mt-auto">
+                   <h4 className="flex items-center gap-2 font-bold text-lg text-blue-200 mb-2">
+                     <ArrowRight size={18}/> הפעולה הנדרשת
                    </h4>
-                   <ul className="space-y-1.5 text-sm leading-relaxed">
+                   <ul className="space-y-2 text-lg">
                      <li>• <strong>Rebranding לשפה:</strong> מעבר מ"חלב מעבדה" ל"חלב נקי" / "חלב העתיד".</li>
                      <li>• <strong>מינוף הכשרות:</strong> הדגשת יתרון ה"פרווה" לקהל מסורתי.</li>
                      <li>• <strong>מיתוג הפטריוטיות:</strong> שימוש בנרטיב "גאווה ישראלית" לביסוס אמון.</li>
@@ -1244,38 +1235,38 @@ export default function PresentationSlides({ slideIndex }) {
               </div>
 
               {/* Cowfree Column */}
-              <div className="flex flex-col gap-3 border-l-4 border-[#3CC4C7] pl-4" dir="rtl">
-                <div className="flex items-center gap-2 text-[#3CC4C7] mb-1">
-                  <div className="bg-[#3CC4C7] text-white p-1.5 rounded-lg"><Utensils size={24}/></div>
-                  <h3 className="text-2xl font-bold">Cowfree</h3>
+              <div className="flex flex-col gap-4 border-l-4 border-[#3CC4C7] pl-6" dir="rtl">
+                <div className="flex items-center gap-3 text-[#3CC4C7] mb-2">
+                  <div className="bg-[#3CC4C7] text-white p-2 rounded-lg"><Utensils size={28}/></div>
+                  <h3 className="text-3xl font-bold">Cowfree</h3>
                 </div>
 
                 {/* Status */}
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                   <h4 className="flex items-center gap-2 font-bold text-base text-gray-700 mb-1.5">
-                     <Map size={16}/> הסטטוס הנוכחי
+                <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                   <h4 className="flex items-center gap-2 font-bold text-lg text-gray-700 mb-2">
+                     <Map size={18}/> הסטטוס הנוכחי
                    </h4>
-                   <p className="text-base font-medium leading-relaxed">
+                   <p className="text-xl font-medium leading-relaxed">
                      נתפסת כחוויית מזון טעימה, נגישה וטרנדית. מובילה בויזואליה בטיקטוק ובקרב קהל נשי שמחפש לייף-סטייל.
                    </p>
                 </div>
 
                 {/* Challenge */}
-                <div className="bg-teal-50 p-4 rounded-xl border border-teal-100">
-                   <h4 className="flex items-center gap-2 font-bold text-base text-teal-800 mb-1.5">
-                     <ShoppingCart size={16}/> האתגר המרכזי
+                <div className="bg-teal-50 p-5 rounded-xl border border-teal-100">
+                   <h4 className="flex items-center gap-2 font-bold text-lg text-teal-800 mb-2">
+                     <ShoppingCart size={18}/> האתגר המרכזי
                    </h4>
-                   <p className="text-base font-medium leading-relaxed text-teal-900">
+                   <p className="text-xl font-medium leading-relaxed text-teal-900">
                      לוגיסטיקה ובלבול. זמינות נמוכה במדפים וחוסר בהירות קריטי לגבי אלרגנים (לקטוז vs חלבון חלב).
                    </p>
                 </div>
 
                 {/* Action Plan */}
-                <div className="bg-[#3CC4C7] p-4 rounded-xl text-white mt-auto">
-                   <h4 className="flex items-center gap-2 font-bold text-base text-teal-100 mb-1.5">
-                     <ArrowRight size={16}/> הפעולה הנדרשת
+                <div className="bg-[#3CC4C7] p-5 rounded-xl text-white mt-auto">
+                   <h4 className="flex items-center gap-2 font-bold text-lg text-teal-100 mb-2">
+                     <ArrowRight size={18}/> הפעולה הנדרשת
                    </h4>
-                   <ul className="space-y-1.5 text-sm leading-relaxed">
+                   <ul className="space-y-2 text-lg">
                      <li>• <strong>הפצה ונגישות:</strong> פתרון הבעיה הלוגיסטית להגעה למדפים.</li>
                      <li>• <strong>הרחבת טעמים:</strong> מענה לביקוש הקיים (קפה, וניל, שוקולד).</li>
                      <li>• <strong>הסברה רפואית:</strong> חידוד המסר לאלרגיים לחלב למניעת אכזבה/סכנה.</li>

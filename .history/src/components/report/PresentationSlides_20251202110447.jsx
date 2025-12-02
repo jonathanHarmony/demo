@@ -1152,40 +1152,31 @@ export default function PresentationSlides({ slideIndex }) {
         ];
         const maxValue = Math.max(...compareData.map(d => Math.max(d.r, d.c)));
         return (
-          <div className="h-full p-6 flex flex-col bg-white">
-            <h2 className="text-2xl font-bold mb-4 text-center text-harmonyDark">סיכום השוואתי: שתי קטגוריות שונות בתודעת הצרכן</h2>
-            <div className="flex-1 flex items-center justify-center overflow-auto">
-              <div className="w-full max-w-6xl px-4">
-                {/* Header Row */}
-                <div className="grid grid-cols-[2fr_1.5fr_2fr] gap-6 mb-4 pb-3 border-b-2 border-gray-200">
-                   <div className="text-right text-xl font-bold text-[#0F1C2E]">Remilk</div>
-                   <div className="text-center text-xl font-bold text-gray-700">נושא</div>
-                   <div className="text-left text-xl font-bold text-[#3CC4C7]">Cowfree</div>
+          <div className="h-full p-8 flex flex-col">
+            <h2 className="text-3xl font-bold mb-6 text-center text-harmonyDark">סיכום השוואתי: שתי קטגוריות שונות בתודעת הצרכן</h2>
+            <div className="flex-grow flex justify-center items-center">
+              <div className="w-full max-w-5xl">
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-4 font-bold text-lg mb-6 text-center">
+                   <div className="text-harmonyDark">Remilk</div>
+                   <div className="px-8">נושא</div>
+                   <div className="text-harmonyTurquoise">Cowfree</div>
                 </div>
-                
-                {/* Data Rows */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {compareData.map((row, i) => (
-                    <div key={i} className="grid grid-cols-[2fr_1.5fr_2fr] gap-6 items-center py-3">
-                      {/* Left: Remilk */}
-                      <div className="flex items-center justify-end gap-3">
-                         <span className="text-lg font-bold text-[#0F1C2E] min-w-[3rem] text-right">{row.r}</span>
-                         <div 
-                           className="h-8 bg-[#0F1C2E] rounded-md shadow-sm" 
-                           style={{width: `${Math.max((row.r / maxValue) * 100, 5)}%`}}
-                         ></div>
+                    <div key={i} className={`grid grid-cols-[1fr_auto_1fr] gap-4 items-center p-4 rounded-lg ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                      {/* Left Bar Remilk */}
+                      <div className="flex justify-end items-center gap-3">
+                         <span className="text-base font-bold text-harmonyDark min-w-[3rem] text-right">{row.r}</span>
+                         <div className="h-6 bg-harmonyDark rounded-full transition-all" style={{width: `${(row.r / maxValue) * 100}%`, minWidth: '20px'}}></div>
                       </div>
                       
-                      {/* Center: Theme */}
-                      <div className="text-center font-bold text-gray-800 text-lg">{row.theme}</div>
+                      {/* Center Text */}
+                      <div className="text-center font-semibold text-gray-700 text-base px-6 min-w-[8rem]">{row.theme}</div>
 
-                      {/* Right: Cowfree */}
-                      <div className="flex items-center justify-start gap-3">
-                         <div 
-                           className="h-8 bg-[#3CC4C7] rounded-md shadow-sm" 
-                           style={{width: `${Math.max((row.c / maxValue) * 100, 5)}%`}}
-                         ></div>
-                         <span className="text-lg font-bold text-[#3CC4C7] min-w-[3rem] text-left">{row.c}</span>
+                      {/* Right Bar Cowfree */}
+                      <div className="flex justify-start items-center gap-3">
+                         <div className="h-6 bg-harmonyTurquoise rounded-full transition-all" style={{width: `${(row.c / maxValue) * 100}%`, minWidth: '20px'}}></div>
+                         <span className="text-base font-bold text-teal-600 min-w-[3rem] text-left">{row.c}</span>
                       </div>
                     </div>
                   ))}

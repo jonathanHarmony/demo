@@ -20,7 +20,7 @@ You only need **Docker Desktop** installed on your computer:
 
 3. **Run the start script**:
    ```bash
-   chmod +x start.sh
+   chmod +x start.sh update.sh
    ./start.sh
    ```
 
@@ -35,7 +35,7 @@ That's it! The project is now running. Any code changes you make will automatica
 To pull the latest changes, commit your work, and push to the repository:
 
 ```bash
-./update_project.sh
+./update.sh
 ```
 
 This script will:
@@ -117,7 +117,7 @@ Press `Ctrl+C` to stop viewing logs.
 | Command | Description |
 |---------|-------------|
 | `./start.sh` | Start the entire project |
-| `./update_project.sh` | Update and sync with git |
+| `./update.sh` | Update and sync with git |
 | `docker-compose down` | Stop all containers |
 | `docker-compose restart` | Restart containers |
 | `docker-compose logs -f` | View live logs |
@@ -129,7 +129,7 @@ Press `Ctrl+C` to stop viewing logs.
 1. **Start the project**: `./start.sh`
 2. **Make your code changes** - they'll auto-reload!
 3. **Test your changes** in the browser
-4. **Update and push**: `./update_project.sh`
+4. **Update and push**: `./update.sh`
 5. **Repeat!**
 
 ## 📞 Need Help?

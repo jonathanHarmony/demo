@@ -1,21 +1,73 @@
 #!/bin/bash
 
-# Ensure the script exits if any command fails
-set -e
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 
-echo "🚀 Starting update process..."
+echo -e "${BLUE}🔄 Updating Harmony AI Project...${NC}\n"
 
-# 1. Update the project (Pull latest code)
-echo "📥 Pulling latest changes from git..."
-#git pull
+# Check if there are uncommitted changes
+if [[ -n $(git status -s) ]]; then
+    echo -e "${YELLOW}📝 Found local changes${NC}"
+    
+    # Stage all changes
+    echo -e "\n${BLUE}📦 Staging all changes...${NC}"
+    git add .
+    
+    # Create commit with timestamp
+    TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+    COMMIT_MSG="Update project - $TIMESTAMP"
+    
+    echo -e "\n${BLUE}💾 Committing changes...${NC}"
+    git commit -m "$COMMIT_MSG"
+    
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Commit failed.${NC}"
+        exit 1
+    fi
+    
+    echo -e "\n${GREEN}✅ Changes committed successfully!${NC}"
+fi
 
-# 2. Redo the docker (Rebuild and start)
-echo "🐳 Rebuilding and starting Docker containers..."
-# Stop existing containers to ensure a clean restart
+# Pull latest changes from remote
+echo -e "\n${BLUE}📥 Pulling latest changes from remote...${NC}"
+git pull
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ Pull failed. Please resolve conflicts manually.${NC}"
+    exit 1
+fi
+
+# Push changes if we committed anything
+if [[ -n $(git log origin/main..HEAD 2>/dev/null) ]]; then
+    echo -e "\n${BLUE}📤 Pushing changes to remote...${NC}"
+    git push
+    
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Push failed. You may need to check your permissions.${NC}"
+        exit 1
+    fi
+    
+    echo -e "\n${GREEN}✅ Changes pushed successfully!${NC}"
+else
+    echo -e "\n${YELLOW}ℹ️  No new commits to push${NC}"
+fi
+
+# Rebuild and restart Docker containers
+echo -e "\n${BLUE}🐳 Rebuilding and restarting Docker containers...${NC}"
 docker-compose down
+docker-compose up --build -d
 
-# Build and start
-# --build: Build images before starting containers.
-docker-compose up --build
+if [ $? -ne 0 ]; then
+    echo -e "${RED}❌ Docker restart failed.${NC}"
+    exit 1
+fi
 
-echo "✅ Update and startup complete!"
+echo -e "\n${GREEN}✅ Update complete!${NC}"
+echo -e "\n${BLUE}📍 Your application is running at:${NC}"
+echo -e "   Frontend: ${GREEN}http://localhost:5173${NC}"
+echo -e "   Backend API Docs: ${GREEN}http://localhost:8000/docs${NC}"
+echo -e "\n${YELLOW}💡 View logs: ${BLUE}docker-compose logs -f${NC}"
