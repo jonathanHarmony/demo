@@ -245,9 +245,10 @@ USER QUESTION:
             traceback.print_exc()
             print(f"{'='*80}\n")
             
-            if "not found" in str(e).lower() and model_id != "gemini-1.5-pro":
-                print(f"[RAG CLIENT] Model '{model_id}' not found. Retrying with 'gemini-1.5-pro'...")
-                return self.query(prompt, model_id="gemini-1.5-pro", similarity_top_k=similarity_top_k, history=history, slide_context=slide_context)
+            # if "not found" in str(e).lower() and model_id != "gemini-1.5-pro":
+            #     print(f"[RAG CLIENT] Model '{model_id}' not found. Retrying with 'gemini-1.5-pro'...")
+            #     return self.query(prompt, model_id="gemini-1.5-pro", similarity_top_k=similarity_top_k, history=history, slide_context=slide_context)
+            print(f"[RAG CLIENT CRITICAL ERROR] Query failed with model {model_id}. Error: {e}")
             raise e
 
     def playground_query(self, prompt: str, history: List[dict] = None, model_id: str = "gemini-2.5-pro"):
@@ -318,9 +319,10 @@ Your Responsibilities:
             print(f"{'='*80}\n")
             
             # Fallback to a stable model if the requested one fails
-            if "not found" in str(e).lower() and model_id != "gemini-2.5-pro":
-                print(f"[PLAYGROUND] Model '{model_id}' not found. Retrying with 'gemini-2.5-pro'...")
-                return self.playground_query(prompt, history=history, model_id="gemini-2.5-pro")
+            # if "not found" in str(e).lower() and model_id != "gemini-2.5-pro":
+            #     print(f"[PLAYGROUND] Model '{model_id}' not found. Retrying with 'gemini-2.5-pro'...")
+            #     return self.playground_query(prompt, history=history, model_id="gemini-2.5-pro")
+            print(f"[PLAYGROUND CRITICAL ERROR] Query failed with model {model_id}. Error: {e}")
             raise e
 
     def generate_report_components(self, question: str, model_id: str = "gemini-2.5-pro"):
@@ -458,7 +460,8 @@ Make the data specific and relevant to the question. Return ONLY valid JSON."""
             print(f"{'='*80}\n")
             
             # Fallback to a stable model if needed
-            if "not found" in str(e).lower() and model_id != "gemini-2.5-pro":
-                print(f"[REPORT GENERATION] Model '{model_id}' not found. Retrying with 'gemini-2.5-pro'...")
-                return self.generate_report_components(question, model_id="gemini-2.5-pro")
+            # if "not found" in str(e).lower() and model_id != "gemini-2.5-pro":
+            #     print(f"[REPORT GENERATION] Model '{model_id}' not found. Retrying with 'gemini-2.5-pro'...")
+            #     return self.generate_report_components(question, model_id="gemini-2.5-pro")
+            print(f"[REPORT GENERATION CRITICAL ERROR] Generation failed with model {model_id}. Error: {e}")
             raise e

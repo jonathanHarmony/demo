@@ -21,9 +21,16 @@ echo -e "${GREEN}✓ Docker is running${NC}"
 echo -e "\n${BLUE}📥 Pulling latest changes from git...${NC}"
 git pull
 
-# Build and start containers
-echo -e "\n${BLUE}🏗️  Building and starting containers...${NC}"
-docker-compose up -d --build
+# Check if --build flag is passed
+BUILD_FLAG=""
+if [[ "$1" == "--build" ]]; then
+    echo -e "\n${BLUE}🏗️  Building images...${NC}"
+    BUILD_FLAG="--build"
+fi
+
+# Start containers (only build if --build flag is passed)
+echo -e "\n${BLUE}🚀 Starting containers...${NC}"
+docker-compose up -d $BUILD_FLAG
 
 # Wait for services to be ready
 echo -e "\n${YELLOW}⏳ Waiting for services to start...${NC}"
@@ -42,6 +49,7 @@ echo -e "\n${YELLOW}💡 Tips:${NC}"
 echo -e "   - Code changes will automatically reload"
 echo -e "   - View logs: ${BLUE}docker-compose logs -f${NC}"
 echo -e "   - Stop project: ${BLUE}docker-compose down${NC}"
+echo -e "   - Rebuild: ${BLUE}./start.sh --build${NC}"
 echo -e "\n${BLUE}📝 Showing logs (Ctrl+C to exit):${NC}\n"
 
 # Follow logs
