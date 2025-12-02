@@ -8,7 +8,7 @@ import {
   Activity, Database, MessageSquare, ThumbsUp, ThumbsDown, Meh, 
   Heart, Zap, Utensils, AlertTriangle, ShoppingCart, Info, Star, 
   FlaskConical, Flag, Baby, ShieldAlert, Search, Lightbulb, Rocket,
-  Mars, Venus, HelpCircle, Atom, Leaf, Target, Map, ArrowRight,
+  Mars, Venus, HelpCircle, Atom, Leaf, Target, Map, ArrowRight, ArrowLeft,
   Layout, FileText, Clock, Sparkles, Globe, User, Quote, Compass, Brain, Share2, Layers
 } from 'lucide-react';
 
@@ -33,7 +33,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 0: שער המצגת
       case 0:
         return (
-          <div className="h-full flex flex-col justify-between p-12 relative">
+          <div className="h-full flex flex-col justify-between p-12 relative" dir="rtl">
             <div className="flex justify-center pt-8">
               <div className="flex flex-col items-center">
                  <h1 className="text-4xl font-bold tracking-tighter text-harmonyBlue mb-2">Harmony AI</h1>
@@ -46,7 +46,7 @@ export default function PresentationSlides({ slideIndex }) {
                 <h1 className="text-[46pt] font-semibold leading-[120%]">דוח עומק צרכני<br/>לשוק החלב לא מהחי בישראל</h1>
               </div>
               <p className="text-[22pt] text-harmonyBlue font-medium">
-                השוואה אסטרטגית: Remilk מול Cowfree
+                השוואה אסטרטגית: מותג א מול מותג ב
               </p>
               <div className="mt-8 px-8 py-3 bg-gray-50 rounded-full border border-gray-200">
                 <span className="text-lg text-gray-600">מבוסס על 2,706 תגובות + 72 משתתפים בסקר טבעונים</span>
@@ -62,21 +62,21 @@ export default function PresentationSlides({ slideIndex }) {
                   strokeWidth={0}
                 />
                 <div className="text-[4.5rem] font-bold text-[#1e1e50] tracking-tight font-slab leading-none">
-                  remilk.
+                  מותג א
                 </div>
               </div>
 
               {/* Cowfree Custom Logo */}
               <div className="flex flex-col items-center leading-none select-none">
                 <div className="relative">
-                  <span className="text-[5.5rem] font-black text-[#008542] tracking-tighter font-sans" style={{ textShadow: '0 0 1px rgba(0,0,0,0.1)' }}>cow</span>
+                  <span className="text-[5.5rem] font-black text-[#008542] tracking-tighter font-sans" style={{ textShadow: '0 0 1px rgba(0,0,0,0.1)' }}>מותג</span>
                   {/* Splash Drops */}
                   <svg className="absolute -top-3 left-[2.8rem] w-8 h-8 text-[#008542] fill-current" viewBox="0 0 24 24">
                      <path d="M12 2C12 2 16 8 16 11C16 13.2 14.2 15 12 15C9.8 15 8 13.2 8 11C8 8 12 2 12 2Z" transform="rotate(-15 12 12)" />
                      <circle cx="19" cy="6" r="2.5" />
                   </svg>
                 </div>
-                <span className="text-[4rem] font-black text-[#008542] tracking-[0.15em] -mt-3 font-sans">FREE</span>
+                <span className="text-[4rem] font-black text-[#008542] tracking-[0.15em] -mt-3 font-sans">ב</span>
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 1 (Refined): מי אנחנו
       case 1:
         return (
-          <div className="h-full p-16 flex flex-col bg-white">
+          <div className="h-full p-12 flex flex-col bg-white" dir="rtl">
             <h2 className="text-4xl font-bold text-[#0F1C2E] mb-20 text-right relative inline-block self-start">
               Harmony – פלטפורמת המחקר של עידן ה־AI
               <span className="absolute -bottom-4 right-0 w-20 h-1 bg-[#4DA3FF]"></span>
@@ -143,7 +143,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 2 (Refined): מה אנחנו נותנים
       case 2:
         return (
-          <div className="h-full px-16 py-12 flex flex-col bg-gray-50/30">
+          <div className="h-full px-16 py-12 flex flex-col bg-gray-50/30" dir="rtl">
              <div className="text-center mb-16">
                <h2 className="text-4xl font-bold text-[#0F1C2E] mb-4">
                  מה Harmony מאפשרת לכם לעשות — בשניות
@@ -191,7 +191,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 3 (Was 1): מקורות הדאטה
       case 3:
         return (
-          <div className="h-full p-12 flex flex-col">
+          <div className="h-full p-12 flex flex-col" dir="rtl">
             <div className="flex items-center gap-4 mb-10">
               <Database className="text-harmonyBlue" size={32} />
               <h2 className="text-4xl font-bold text-harmonyDark">בסיס הנתונים: תמונת מצב מקיפה מכל זירות השיח</h2>
@@ -253,13 +253,13 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 4 (Was 2): נפח שיח לפי מותג
       case 4:
         const volData = [
-          { name: 'Cowfree', count: 1703, fill: COLORS.cowfree },
-          { name: 'Remilk', count: 1392, fill: COLORS.remilk },
+          { name: 'מותג ב', count: 1703, fill: COLORS.cowfree },
+          { name: 'מותג א', count: 1392, fill: COLORS.remilk },
         ];
         return (
-          <div className="h-full p-12 flex">
+          <div className="h-full p-12 flex" dir="rtl">
             <div className="w-3/5 h-full relative p-8">
-              <h2 className="text-3xl font-bold mb-8 text-harmonyDark">נפח שיח: Cowfree שולטת בוידאו הוויראלי, Remilk בשיח העומק</h2>
+              <h2 className="text-3xl font-bold mb-8 text-harmonyDark">נפח שיח: מותג ב שולט בוידאו הוויראלי, מותג א בשיח העומק</h2>
               <ResponsiveContainer width="100%" height="80%">
                 <BarChart data={volData} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -282,11 +282,11 @@ export default function PresentationSlides({ slideIndex }) {
                 <ul className="space-y-4 text-lg">
                   <li className="flex items-start gap-3">
                     <span className="w-3 h-3 rounded-full bg-[#3CC4C7] mt-2 shrink-0"></span>
-                    <span><strong>Cowfree</strong> ← שליטה מוחלטת ב־TikTok (נראות)</span>
+                    <span><strong>מותג ב</strong> ← שליטה מוחלטת ב־TikTok (נראות)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="w-3 h-3 rounded-full bg-[#0F1C2E] mt-2 shrink-0"></span>
-                    <span><strong>Remilk</strong> ← שליטה בפייסבוק וטוקבקים (אידיאולוגיה)</span>
+                    <span><strong>מותג א</strong> ← שליטה בפייסבוק וטוקבקים (אידיאולוגיה)</span>
                   </li>
                 </ul>
               </div>
@@ -297,8 +297,8 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 5 (Was 3): פילוח לפי פלטפורמות
       case 5:
         const platData = [
-          { name: 'Cowfree', Facebook: 23.3, TikTok: 54.7, YouTube: 12.3, Talkbacks: 9.7 },
-          { name: 'Remilk', Facebook: 56.5, TikTok: 16.9, YouTube: 11.4, Talkbacks: 9.8 },
+          { name: 'מותג ב', Facebook: 23.3, TikTok: 54.7, YouTube: 12.3, Talkbacks: 9.7 },
+          { name: 'מותג א', Facebook: 56.5, TikTok: 16.9, YouTube: 11.4, Talkbacks: 9.8 },
         ];
         return (
           <div className="h-full p-12 flex flex-col">
@@ -325,8 +325,8 @@ export default function PresentationSlides({ slideIndex }) {
              <div className="mt-8 p-6 bg-gray-50 border border-gray-100 rounded-lg flex items-center gap-6">
                 <Lightbulb className="text-yellow-500" size={32} />
                 <div className="text-lg">
-                  <span className="font-bold text-[#3CC4C7]">Cowfree</span> = "משהו טעים שמראים בוידאו" <br/>
-                  <span className="font-bold text-[#0F1C2E]">Remilk</span> = "דיון ציבורי כבד ואידיאולוגי"
+                  <span className="font-bold text-[#3CC4C7]">מותג ב</span> = "משהו טעים שמראים בוידאו" <br/>
+                  <span className="font-bold text-[#0F1C2E]">מותג א</span> = "דיון ציבורי כבד ואידיאולוגי"
                 </div>
              </div>
           </div>
@@ -335,12 +335,12 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 6 (Was 4): סנטימנט צרכני
       case 6:
         const sentData = [
-          { name: 'Remilk', Positive: 58, Neutral: 1111, Negative: 94 },
-          { name: 'Cowfree', Positive: 77, Neutral: 1523, Negative: 103 },
+          { name: 'מותג א', Positive: 58, Neutral: 1111, Negative: 94 },
+          { name: 'מותג ב', Positive: 77, Neutral: 1523, Negative: 103 },
         ];
         return (
-          <div className="h-full p-12 flex flex-col">
-            <h2 className="text-3xl font-bold mb-8 text-harmonyDark">סנטימנט: Cowfree נהנית מאהדה, Remilk מעוררת מחלוקת</h2>
+          <div className="h-full p-12 flex flex-col" dir="rtl">
+            <h2 className="text-3xl font-bold mb-8 text-harmonyDark">סנטימנט: מותג ב נהנה מאהדה, מותג א מעורר מחלוקת</h2>
             
             <div className="flex-grow w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -376,7 +376,7 @@ export default function PresentationSlides({ slideIndex }) {
           { subject: 'עתידנות', Remilk: 42, Cowfree: 5, fullMark: 50 },
         ];
         return (
-          <div className="h-full p-12 relative">
+          <div className="h-full p-12 relative" dir="rtl">
              {/* Header */}
              <div className="absolute top-12 right-12 flex items-center gap-4">
                <h2 className="text-4xl font-bold text-harmonyDark">מניעים לקנות</h2>
@@ -391,7 +391,7 @@ export default function PresentationSlides({ slideIndex }) {
                     <div className="bg-[#E0F7FA]/50 border-r-4 border-[#3CC4C7] p-6 rounded-l-xl relative">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h3 className="text-xl font-bold text-[#3CC4C7] mb-1">Cowfree</h3>
+                                <h3 className="text-xl font-bold text-[#3CC4C7] mb-1">מותג ב</h3>
                                 <p className="text-gray-700 font-medium leading-snug">מוביל משמעותית בשיח על טעם וחוויה (46)</p>
                             </div>
                             <Utensils className="text-[#3CC4C7]" size={28} />
@@ -402,7 +402,7 @@ export default function PresentationSlides({ slideIndex }) {
                     <div className="bg-[#E3F2FD]/50 border-r-4 border-[#0F1C2E] p-6 rounded-l-xl relative">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h3 className="text-xl font-bold text-[#0F1C2E] mb-1">Remilk</h3>
+                                <h3 className="text-xl font-bold text-[#0F1C2E] mb-1">מותג א</h3>
                                 <p className="text-gray-700 font-medium leading-snug">מוביל בחדשנות, גאווה ישראלית ועתידנות</p>
                             </div>
                             <Atom className="text-[#0F1C2E]" size={28} />
@@ -411,7 +411,7 @@ export default function PresentationSlides({ slideIndex }) {
 
                     {/* Quote */}
                     <div className="mt-12 text-gray-500 italic text-lg leading-relaxed px-2 bg-gray-50 p-4 rounded-lg">
-                        "הטעם של Cowfree פשוט הפתיע אותי, זה בול כמו הדבר האמיתי"
+                        "הטעם של מותג ב פשוט הפתיע אותי, זה בול כמו הדבר האמיתי"
                     </div>
 
                  </div>
@@ -423,8 +423,8 @@ export default function PresentationSlides({ slideIndex }) {
                         <PolarGrid stroke="#e5e7eb" />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#0F1C2E', fontSize: 16, fontWeight: 'bold' }} />
                         <PolarRadiusAxis angle={30} domain={[0, 50]} tick={false} axisLine={false} />
-                        <Radar name="Cowfree" dataKey="Cowfree" stroke="#3CC4C7" strokeWidth={2} fill="#3CC4C7" fillOpacity={0.5} />
-                        <Radar name="Remilk" dataKey="Remilk" stroke="#0F1C2E" strokeWidth={2} fill="#0F1C2E" fillOpacity={0.6} />
+                        <Radar name="מותג ב" dataKey="Cowfree" stroke="#3CC4C7" strokeWidth={2} fill="#3CC4C7" fillOpacity={0.5} />
+                        <Radar name="מותג א" dataKey="Remilk" stroke="#0F1C2E" strokeWidth={2} fill="#0F1C2E" fillOpacity={0.6} />
                       </RadarChart>
                     </ResponsiveContainer>
                  </div>
@@ -435,7 +435,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 8 (Was 6): חסמים חזקים
       case 8:
         return (
-          <div className="h-full p-12 flex flex-col">
+          <div className="h-full p-12 flex flex-col" dir="rtl">
             <h2 className="text-3xl font-bold mb-10 text-center text-harmonyDark">מפת החסמים: פחד מהותי (רגשי) מול תסכול לוגיסטי (פרקטי)</h2>
             
             <div className="flex flex-grow gap-8">
@@ -443,7 +443,7 @@ export default function PresentationSlides({ slideIndex }) {
               <div className="w-1/2 bg-gray-50 rounded-lg p-6 relative">
                  <div className="flex items-center gap-2 mb-6 text-[#0F1C2E]">
                    <AlertTriangle size={28} />
-                   <h3 className="text-2xl font-bold">Remilk (רגשיים)</h3>
+                   <h3 className="text-2xl font-bold">מותג א (רגשיים)</h3>
                  </div>
                  <div className="space-y-4">
                    {[
@@ -472,7 +472,7 @@ export default function PresentationSlides({ slideIndex }) {
               <div className="w-1/2 bg-gray-50 rounded-lg p-6 relative">
                  <div className="flex items-center gap-2 mb-6 text-[#3CC4C7]">
                    <ShoppingCart size={28} />
-                   <h3 className="text-2xl font-bold">Cowfree (פרקטיים)</h3>
+                   <h3 className="text-2xl font-bold">מותג ב (פרקטיים)</h3>
                  </div>
                  <div className="space-y-4">
                    {[
@@ -503,11 +503,11 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 9 (Was 7): אלרגיות
       case 9:
         const allergyData = [
-          { name: 'Remilk', value: 140, fill: '#EF4444' },
-          { name: 'Cowfree', value: 36, fill: COLORS.cowfree }
+          { name: 'מותג א', value: 140, fill: '#EF4444' },
+          { name: 'מותג ב', value: 36, fill: COLORS.cowfree }
         ];
         return (
-          <div className="h-full p-12 flex flex-col">
+          <div className="h-full p-12 flex flex-col" dir="rtl">
             <div className="flex items-center gap-3 mb-2">
               <ShieldAlert className="text-red-600" size={36} />
               <h2 className="text-3xl font-bold">אלרגיות: הבלבול המסוכן שחוסם רכישה (176 אזכורים)</h2>
@@ -556,11 +556,11 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 10 (Was 8): כשרות/דת
       case 10:
         const kosherData = [
-           { name: 'Remilk', value: 150, fill: COLORS.remilk },
-           { name: 'Cowfree', value: 25, fill: COLORS.cowfree },
+           { name: 'מותג א', value: 150, fill: COLORS.remilk },
+           { name: 'מותג ב', value: 25, fill: COLORS.cowfree },
         ];
         return (
-          <div className="h-full p-12 flex flex-col">
+          <div className="h-full p-12 flex flex-col" dir="rtl">
              <div className="flex items-center gap-3 mb-8">
                <Star className="text-yellow-600" fill="currentColor" size={32} />
                <h2 className="text-3xl font-bold">הזווית היהודית: כשרות פרווה כשובר שוויון אסטרטגי (242 הופעות)</h2>
@@ -579,7 +579,7 @@ export default function PresentationSlides({ slideIndex }) {
                         outerRadius={120} 
                         label={({ cx, cy, midAngle, innerRadius, outerRadius, value, index }) => {
                           const RADIAN = Math.PI / 180;
-                          const radius = outerRadius * 1.2;
+                          const radius = outerRadius * 1.5;
                           const x = cx + radius * Math.cos(-midAngle * RADIAN);
                           const y = cy + radius * Math.sin(-midAngle * RADIAN);
                           return (
@@ -589,7 +589,7 @@ export default function PresentationSlides({ slideIndex }) {
                               fill="#0F1C2E" 
                               textAnchor={x > cx ? 'start' : 'end'} 
                               dominantBaseline="central" 
-                              fontSize={28} 
+                              fontSize={32} 
                               fontWeight="bold"
                             >
                               {value}
@@ -617,7 +617,7 @@ export default function PresentationSlides({ slideIndex }) {
                    </ul>
                  </div>
                  <p className="text-xl font-medium text-harmonyBlue bg-blue-50 p-4 rounded-lg">
-                   Remilk פוגע עמוק בשיח דתי–הלכתי.<br/>
+                   מותג א פוגע עמוק בשיח דתי–הלכתי.<br/>
                    זו הזדמנות עצומה אם יאושר כפרווה.
                  </p>
                </div>
@@ -637,18 +637,18 @@ export default function PresentationSlides({ slideIndex }) {
           { text: 'תעשייתי', size: 'text-2xl', color: 'text-red-300', w: 'font-medium' },
         ];
         return (
-          <div className="h-full p-8 flex flex-col">
-            <h2 className="text-3xl font-bold mb-2 border-b pb-2 w-full text-harmonyDark">תפיסת הבריאות: Remilk מתמודדת עם פחדים, Cowfree עם שאלות</h2>
+          <div className="h-full p-8 flex flex-col" dir="rtl">
+            <h2 className="text-3xl font-bold mb-2 border-b pb-2 w-full text-harmonyDark">תפיסת הבריאות: מותג א מתמודד עם פחדים, מותג ב עם שאלות</h2>
             
             <div className="text-lg text-[#343434] font-medium mb-2 text-right w-full">
-                פיצול לפי מותג: Remilk מול Cowfree
+                פיצול לפי מותג: מותג א מול מותג ב
             </div>
 
             <div className="flex gap-8 mb-4 w-full">
                  {/* Remilk Box */}
                  <div className="w-1/2 bg-[#F5F7FA] border border-[#4DA3FF] rounded-xl p-4 flex flex-col shadow-sm">
                     <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl font-bold text-[#0F1C2E]">Remilk</h3>
+                        <h3 className="text-xl font-bold text-[#0F1C2E]">מותג א</h3>
                         <div className="flex gap-2 text-[#0F1C2E]">
                              <FlaskConical size={20} />
                              <AlertTriangle size={20} />
@@ -666,7 +666,7 @@ export default function PresentationSlides({ slideIndex }) {
                  {/* Cowfree Box */}
                  <div className="w-1/2 bg-[#F5F7FA] border border-[#3CC4C7] rounded-xl p-4 flex flex-col shadow-sm">
                     <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl font-bold text-[#3CC4C7]">Cowfree</h3>
+                        <h3 className="text-xl font-bold text-[#3CC4C7]">מותג ב</h3>
                          <div className="flex gap-2 text-[#3CC4C7]">
                              <Leaf size={20} />
                              <Info size={20} />
@@ -691,7 +691,7 @@ export default function PresentationSlides({ slideIndex }) {
             </div>
 
             <div className="mt-4 text-lg text-center text-harmonyDark leading-relaxed">
-              <span className="font-bold">תובנה:</span> Remilk יוצר כמות עצומה של פחדי בריאות וסכנות (פי 6 יותר מקאופריי).<br/>
+              <span className="font-bold">תובנה:</span> מותג א יוצר כמות עצומה של פחדי בריאות וסכנות (פי 6 יותר ממותג ב).<br/>
               רוב הפחד נובע מדימוי "מעבדתי/כימי" ולא מעובדות.
             </div>
           </div>
@@ -711,18 +711,18 @@ export default function PresentationSlides({ slideIndex }) {
         ];
 
         return (
-          <div className="h-full p-12 flex flex-col items-center">
-            <h2 className="text-3xl font-bold mb-12 self-start w-full text-harmonyDark">הפער המגדרי: טכנולוגיה גברית מול לייף–סטייל נשי</h2>
+          <div className="h-full p-6 flex flex-col items-center" dir="rtl">
+            <h2 className="text-2xl font-bold mb-6 self-start w-full text-harmonyDark">הפער המגדרי: טכנולוגיה גברית מול לייף–סטייל נשי</h2>
             
-            <div className="flex justify-center gap-24 w-full mb-8">
+            <div className="flex justify-center gap-16 w-full mb-4">
               {/* Remilk Chart */}
               <div className="flex flex-col items-center">
-                <div className="relative flex justify-center items-center" style={{ width: 260, height: 260 }}>
-                  <PieChart width={260} height={260}>
+                <div className="relative flex justify-center items-center" style={{ width: 220, height: 220 }}>
+                  <PieChart width={220} height={220}>
                     <Pie
                       data={genderRemilk}
-                      innerRadius={104}
-                      outerRadius={130}
+                      innerRadius={88}
+                      outerRadius={110}
                       startAngle={90}
                       endAngle={-270}
                       dataKey="value"
@@ -733,11 +733,11 @@ export default function PresentationSlides({ slideIndex }) {
                       ))}
                     </Pie>
                   </PieChart>
-                  <div className="absolute text-[36pt] font-semibold text-[#1A1A1A]">62%</div>
+                  <div className="absolute text-4xl font-semibold text-[#1A1A1A]">62%</div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-[#0F1C2E] mt-6 mb-2">Remilk</h3>
-                <ul className="text-[18pt] space-y-1 text-gray-700">
+                <h3 className="text-xl font-bold text-[#0F1C2E] mt-4 mb-2">מותג א</h3>
+                <ul className="text-lg space-y-1 text-gray-700">
                   <li className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#4DA3FF]"></div> גברים: 62 אחוז</li>
                   <li className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#3CC4C7]"></div> נשים: 31 אחוז</li>
                   <li className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#DADADA]"></div> לא מזוהה: 7 אחוז</li>
@@ -746,17 +746,17 @@ export default function PresentationSlides({ slideIndex }) {
 
               {/* Cowfree Chart */}
               <div className="flex flex-col items-center">
-                <div className="relative flex justify-center items-center" style={{ width: 260, height: 260 }}>
-                   <div className="absolute top-0 right-[-40px] flex flex-col gap-2">
-                      <Mars size={24} color="#4DA3FF" strokeWidth={1.5} />
-                      <Venus size={24} color="#3CC4C7" strokeWidth={1.5} />
-                      <HelpCircle size={24} color="#DADADA" strokeWidth={1.5} />
+                <div className="relative flex justify-center items-center" style={{ width: 220, height: 220 }}>
+                   <div className="absolute top-0 right-[-30px] flex flex-col gap-2">
+                      <Mars size={20} color="#4DA3FF" strokeWidth={1.5} />
+                      <Venus size={20} color="#3CC4C7" strokeWidth={1.5} />
+                      <HelpCircle size={20} color="#DADADA" strokeWidth={1.5} />
                    </div>
-                  <PieChart width={260} height={260}>
+                  <PieChart width={220} height={220}>
                     <Pie
                       data={genderCowfree}
-                      innerRadius={104}
-                      outerRadius={130}
+                      innerRadius={88}
+                      outerRadius={110}
                       startAngle={90}
                       endAngle={-270}
                       dataKey="value"
@@ -767,11 +767,11 @@ export default function PresentationSlides({ slideIndex }) {
                       ))}
                     </Pie>
                   </PieChart>
-                  <div className="absolute text-[36pt] font-semibold text-[#1A1A1A]">55%</div>
+                  <div className="absolute text-4xl font-semibold text-[#1A1A1A]">55%</div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-[#3CC4C7] mt-6 mb-2">Cowfree</h3>
-                <ul className="text-[18pt] space-y-1 text-gray-700">
+                <h3 className="text-xl font-bold text-[#3CC4C7] mt-4 mb-2">מותג ב</h3>
+                <ul className="text-lg space-y-1 text-gray-700">
                   <li className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#4DA3FF]"></div> גברים: 38 אחוז</li>
                   <li className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#3CC4C7]"></div> נשים: 55 אחוז</li>
                   <li className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#DADADA]"></div> לא מזוהה: 7 אחוז</li>
@@ -779,10 +779,10 @@ export default function PresentationSlides({ slideIndex }) {
               </div>
             </div>
 
-            <div className="bg-[#F5F7FA] border border-[#4DA3FF] px-8 py-6 rounded text-center mt-auto w-2/3">
-              <p className="text-[18pt] text-gray-800 font-medium">
-                Remilk – משך יותר גברים ושיח טכנולוגי/אידאולוגי<br/>
-                Cowfree – משך יותר נשים ושיח של טעם, חוויה ונראות
+            <div className="bg-[#F5F7FA] border border-[#4DA3FF] px-6 py-4 rounded text-center mt-auto w-2/3 mb-2">
+              <p className="text-xl text-gray-800 font-medium">
+                מותג א – משך יותר גברים ושיח טכנולוגי/אידאולוגי<br/>
+                מותג ב – משך יותר נשים ושיח של טעם, חוויה ונראות
               </p>
             </div>
           </div>
@@ -799,20 +799,20 @@ export default function PresentationSlides({ slideIndex }) {
           { name: 'סרטן', remilk: 7, cowfree: 0 },
         ];
         return (
-          <div className="h-full px-8 py-6 flex flex-col">
-            <div className="flex items-center justify-end gap-3 mb-4">
-              <h2 className="text-[38pt] font-bold text-[#1A1A1A]">מיתוג ה'מעבדה': המכשול הפסיכולוגי הגדול של Remilk</h2>
-              <FlaskConical size={42} className="text-[#0F1C2E]" />
+          <div className="h-full px-6 py-4 flex flex-col" dir="rtl">
+            <div className="flex items-center justify-end gap-3 mb-3">
+              <h2 className="text-3xl font-bold text-[#1A1A1A]">מיתוג ה'מעבדה': המכשול הפסיכולוגי הגדול של מותג א</h2>
+              <FlaskConical size={36} className="text-[#0F1C2E]" />
             </div>
 
             {/* Top comparison boxes */}
-            <div className="flex gap-8 mb-6 h-[220px]">
+            <div className="flex gap-6 mb-3 h-[150px]">
                {/* Remilk Box */}
-               <div className="w-1/2 bg-[#F5F7FA] border border-[#0F1C2E] rounded-xl p-4 relative shadow-sm">
-                   <div className="absolute top-4 left-4"><FlaskConical size={32} className="text-[#0F1C2E]" /></div>
-                   <h3 className="text-2xl font-bold text-[#0F1C2E] mb-2 text-right pr-2">Remilk</h3>
-                   <div className="text-lg font-bold text-gray-600 mb-2 text-right pr-2">143 הופעות (58%)</div>
-                   <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-lg text-right pr-2">
+               <div className="w-1/2 bg-[#F5F7FA] border border-[#0F1C2E] rounded-xl p-3 relative shadow-sm">
+                   <div className="absolute top-3 left-3"><FlaskConical size={28} className="text-[#0F1C2E]" /></div>
+                   <h3 className="text-xl font-bold text-[#0F1C2E] mb-1 text-right pr-2">מותג א</h3>
+                   <div className="text-base font-bold text-gray-600 mb-1 text-right pr-2">143 הופעות (58%)</div>
+                   <div className="grid grid-cols-2 gap-x-6 gap-y-0.5 text-base text-right pr-2">
                        <div className="flex justify-between"><span>85</span> <span>מעבדה:</span></div>
                        <div className="flex justify-between"><span>33</span> <span>לא טבעי:</span></div>
                        <div className="flex justify-between"><span>40</span> <span>כימי:</span></div>
@@ -820,27 +820,27 @@ export default function PresentationSlides({ slideIndex }) {
                        <div className="flex justify-between"><span>31</span> <span>מהונדס/GMO:</span></div>
                        <div className="flex justify-between"><span>7</span> <span>סרטן:</span></div>
                    </div>
-                   <div className="mt-2 text-[#0F1C2E] font-bold text-sm text-right pr-2">אטמוספירה: "סיכון מדומיין"</div>
+                   <div className="mt-1 text-[#0F1C2E] font-bold text-xs text-right pr-2">אטמוספירה: "סיכון מדומיין"</div>
                </div>
 
                {/* Cowfree Box */}
-               <div className="w-1/2 bg-[#F5F7FA] border border-[#3CC4C7] rounded-xl p-4 relative shadow-sm">
-                   <div className="absolute top-4 left-4"><Leaf size={32} className="text-[#3CC4C7]" /></div>
-                   <h3 className="text-2xl font-bold text-[#3CC4C7] mb-2 text-right pr-2">Cowfree</h3>
-                   <div className="text-lg font-bold text-gray-600 mb-2 text-right pr-2">29 הופעות (17%)</div>
-                   <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-lg text-right pr-2">
+               <div className="w-1/2 bg-[#F5F7FA] border border-[#3CC4C7] rounded-xl p-3 relative shadow-sm">
+                   <div className="absolute top-3 left-3"><Leaf size={28} className="text-[#3CC4C7]" /></div>
+                   <h3 className="text-xl font-bold text-[#3CC4C7] mb-1 text-right pr-2">מותג ב</h3>
+                   <div className="text-base font-bold text-gray-600 mb-1 text-right pr-2">29 הופעות (17%)</div>
+                   <div className="grid grid-cols-2 gap-x-6 gap-y-0.5 text-base text-right pr-2">
                        <div className="flex justify-between"><span>8</span> <span>כימי:</span></div>
                        <div className="flex justify-between"><span>0</span> <span>GMO:</span></div>
                        <div className="flex justify-between"><span>6</span> <span>מעבדה/מהונדס:</span></div>
                        <div className="flex justify-between"><span>0</span> <span>סרטן:</span></div>
                        <div className="flex justify-between"><span>9</span> <span>לא טבעי:</span></div>
                    </div>
-                   <div className="mt-2 text-[#3CC4C7] font-bold text-sm text-right pr-2">אטמוספירה: "בלבול קל, לא פחד"</div>
+                   <div className="mt-1 text-[#3CC4C7] font-bold text-xs text-right pr-2">אטמוספירה: "בלבול קל, לא פחד"</div>
                </div>
             </div>
 
             {/* Chart Area */}
-            <div className="flex-grow w-full mb-4">
+            <div className="flex-1 w-full mb-2 min-h-0">
                 <ResponsiveContainer width="100%" height="100%">
                    <BarChart data={syntheticData} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
                       <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -848,10 +848,10 @@ export default function PresentationSlides({ slideIndex }) {
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Bar dataKey="remilk" name="Remilk" fill="#0F1C2E" radius={[4, 4, 0, 0]} >
+                      <Bar dataKey="remilk" name="מותג א" fill="#0F1C2E" radius={[4, 4, 0, 0]} >
                          <LabelList dataKey="remilk" position="top" fill="#0F1C2E" fontSize={14} fontWeight="bold" />
                       </Bar>
-                      <Bar dataKey="cowfree" name="Cowfree" fill="#3CC4C7" radius={[4, 4, 0, 0]} >
+                      <Bar dataKey="cowfree" name="מותג ב" fill="#3CC4C7" radius={[4, 4, 0, 0]} >
                          <LabelList dataKey="cowfree" position="top" fill="#3CC4C7" fontSize={14} fontWeight="bold" />
                       </Bar>
                    </BarChart>
@@ -859,10 +859,9 @@ export default function PresentationSlides({ slideIndex }) {
             </div>
 
             {/* Insight Box */}
-            <div className="bg-[#FFF7E6] border-2 border-orange-200 rounded-xl p-4 text-center shadow-sm mt-auto">
-               <div className="text-[20pt] leading-tight text-gray-800">
-                  <span className="font-bold">תובנה אסטרטגית:</span> Remilk מזוהה חזק עם שפה של כימיה ומעבדה.<br/>
-                  הפחד אינו מבוסס מדע – זה מיתוג.
+            <div className="bg-[#FFF7E6] border-2 border-orange-200 rounded-xl p-3 text-center shadow-sm mt-auto">
+               <div className="text-base leading-tight text-gray-800">
+                  <span className="font-bold">תובנה אסטרטגית:</span> מותג א מזוהה חזק עם שפה של כימיה ומעבדה. הפחד אינו מבוסס מדע – זה מיתוג.
                </div>
             </div>
           </div>
@@ -871,33 +870,45 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 14 (Was 12): סקרנות והתלהבות
       case 14:
         const curiosityChartData = [
-          { name: 'Cowfree', value: 46, fill: '#3CC4C7' }, 
-          { name: 'Remilk', value: 22, fill: '#0F1C2E' },
+          { name: 'מותג ב', value: 46, fill: '#3CC4C7' }, 
+          { name: 'מותג א', value: 22, fill: '#0F1C2E' },
         ];
         return (
-          <div className="h-full p-8 flex flex-col">
+          <div className="h-full p-6 flex flex-col" dir="rtl">
             {/* Header */}
             <div className="mb-6">
-              <h2 className="text-3xl font-bold text-[#1A1A1A]">מנוע הסקרנות: התיאבון של Cowfree מול העניין של Remilk</h2>
+              <h2 className="text-3xl font-bold text-[#1A1A1A]">מנוע הסקרנות: התיאבון של מותג ב מול העניין של מותג א</h2>
               <h3 className="text-xl text-gray-500 font-medium">פירוק לפי מותג ותתי תמות (68 הופעות)</h3>
             </div>
 
-            {/* Upper Section: Chart and Table */}
+            {/* Upper Section: Chart and Table - REPLACED WITH HTML BARS FOR RTL STABILITY */}
             <div className="flex gap-8 mb-6 h-[220px]">
               {/* Chart */}
-              <div className="w-1/2">
-                 <ResponsiveContainer width="100%" height="100%">
-                   <BarChart data={curiosityChartData} layout="vertical" margin={{top: 0, right: 30, left: 40, bottom: 0}} barSize={40}>
-                     <XAxis type="number" hide />
-                     <YAxis dataKey="name" type="category" tick={{fontSize: 20, fontWeight: 'bold', fill: '#1A1A1A'}} width={100} axisLine={false} tickLine={false} />
-                     <Bar dataKey="value" radius={[0, 10, 10, 0]}>
-                       <LabelList dataKey="value" position="right" fontSize={20} fontWeight="bold" fill="#1A1A1A" />
-                        {curiosityChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill} />
-                        ))}
-                     </Bar>
-                   </BarChart>
-                 </ResponsiveContainer>
+              <div className="w-1/2 flex flex-col justify-center pr-4">
+                 {curiosityChartData.map((item, idx) => (
+                    <div key={idx} className="flex items-center mb-6 last:mb-0 w-full">
+                       {/* Number (Left) */}
+                       <div className="w-12 text-xl font-bold text-[#1A1A1A] text-left pl-2">
+                          {item.value}
+                       </div>
+                       
+                       {/* Bar Area (Middle) - Flex-grow */}
+                       <div className="flex-grow h-10 bg-gray-100 rounded-lg relative mx-3 overflow-hidden flex justify-end">
+                          <div 
+                             className="h-full rounded-lg" 
+                             style={{ 
+                                width: `${(item.value / 50) * 100}%`, 
+                                backgroundColor: item.fill 
+                             }}
+                          />
+                       </div>
+
+                       {/* Name (Right) */}
+                       <div className="w-24 text-xl font-bold text-[#1A1A1A] text-right">
+                          {item.name}
+                       </div>
+                    </div>
+                 ))}
               </div>
 
               {/* Table */}
@@ -906,8 +917,8 @@ export default function PresentationSlides({ slideIndex }) {
                    <thead className="text-gray-500 border-b border-gray-200">
                      <tr>
                        <th className="pb-2 text-right">תת תמה</th>
-                       <th className="pb-2 text-[#3CC4C7]">Cowfree</th>
-                       <th className="pb-2 text-[#0F1C2E]">Remilk</th>
+                       <th className="pb-2 text-[#3CC4C7]">מותג ב</th>
+                       <th className="pb-2 text-[#0F1C2E]">מותג א</th>
                      </tr>
                    </thead>
                    <tbody className="text-lg font-medium text-gray-800">
@@ -931,7 +942,7 @@ export default function PresentationSlides({ slideIndex }) {
             <div className="flex gap-8 mb-6 flex-grow">
                {/* Cowfree Quotes */}
                <div className="w-1/2 bg-teal-50/50 border-r-4 border-[#3CC4C7] p-4 rounded-lg">
-                  <h4 className="text-xl font-bold text-[#3CC4C7] mb-3">Cowfree</h4>
+                  <h4 className="text-xl font-bold text-[#3CC4C7] mb-3">מותג ב</h4>
                   <div className="space-y-2 text-[16pt] italic text-gray-700">
                      <p>"וואי רוצה לטעום את זה"</p>
                      <p>"מסקרן ברמות, נראה טעים"</p>
@@ -940,7 +951,7 @@ export default function PresentationSlides({ slideIndex }) {
                </div>
                {/* Remilk Quotes */}
                <div className="w-1/2 bg-blue-50/50 border-r-4 border-[#0F1C2E] p-4 rounded-lg">
-                  <h4 className="text-xl font-bold text-[#0F1C2E] mb-3">Remilk</h4>
+                  <h4 className="text-xl font-bold text-[#0F1C2E] mb-3">מותג א</h4>
                   <div className="space-y-2 text-[16pt] italic text-gray-700">
                      <p>"מעניין טכנולוגית"</p>
                      <p>"מסקרן לראות אם זה באמת עובד"</p>
@@ -951,8 +962,8 @@ export default function PresentationSlides({ slideIndex }) {
             {/* Insight Box */}
             <div className="bg-[#FFF7E6] border-2 border-orange-200 rounded-xl p-4 text-center mt-auto">
                <div className="text-[18pt] leading-tight text-gray-800">
-                  <span className="font-bold">הבייס של Cowfree מונע על ידי סקרנות וטעם.</span><br/>
-                  Remilk מונע על ידי עניין טכנולוגי ולא על ידי טעם.
+                  <span className="font-bold">הבייס של מותג ב מונע על ידי סקרנות וטעם.</span><br/>
+                  מותג א מונע על ידי עניין טכנולוגי ולא על ידי טעם.
                </div>
             </div>
           </div>
@@ -968,21 +979,21 @@ export default function PresentationSlides({ slideIndex }) {
           { name: 'תות', val: 1, icon: '🍓' },
         ];
         return (
-          <div className="h-full p-12 flex flex-col">
-            <h2 className="text-3xl font-bold mb-8 text-harmonyDark">ביקוש למוצר: הצרכן מחכה לטעמים של Cowfree</h2>
-            <div className="flex-grow bg-gray-50 rounded-xl p-8 flex items-end justify-around pb-12">
+          <div className="h-full p-6 flex flex-col" dir="rtl">
+            <h2 className="text-2xl font-bold mb-4 text-harmonyDark">ביקוש למוצר: הצרכן מחכה לטעמים של מותג ב</h2>
+            <div className="flex-grow bg-gray-50 rounded-xl p-6 flex items-end justify-around pb-16">
                {flavorData.map((f, i) => (
-                 <div key={i} className="flex flex-col items-center gap-2 group">
-                    <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">{f.icon}</div>
-                    <div className="w-16 bg-harmonyBlue rounded-t-lg transition-all duration-700 ease-out" style={{height: `${f.val * 30}px`}}></div>
-                    <div className="font-bold text-harmonyDark">{f.name}</div>
-                    <div className="text-sm text-gray-500">{f.val}</div>
+                 <div key={i} className="flex flex-col items-center gap-3 group">
+                    <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">{f.icon}</div>
+                    <div className="w-20 bg-[#4DA3FF] rounded-t-lg transition-all duration-700 ease-out" style={{height: `${f.val * 20}px`}}></div>
+                    <div className="font-bold text-harmonyDark text-lg mt-2">{f.name}</div>
+                    <div className="text-base text-gray-600 font-semibold">{f.val}</div>
                  </div>
                ))}
             </div>
             <div className="mt-8 border-t pt-4 text-center">
-              Cowfree נתפס כמוצר שאפשר לפתח ולגוון.<br/>
-              <span className="text-gray-500">Remilk כמעט ללא בקשות → עדיין נתפס כטכנולוגיה ולא כחווית טעימה.</span>
+              מותג ב נתפס כמוצר שאפשר לפתח ולגוון.<br/>
+              <span className="text-gray-500">מותג א כמעט ללא בקשות → עדיין נתפס כטכנולוגיה ולא כחווית טעימה.</span>
             </div>
           </div>
         );
@@ -990,7 +1001,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 16 (Was 14): פחדי הורים
       case 16:
         return (
-          <div className="h-full flex overflow-hidden">
+          <div className="h-full flex overflow-hidden" dir="rtl">
              {/* Left Side: Images Strip */}
              <div className="w-1/3 h-full bg-[#FFF7F0] border-l border-red-50 p-4 grid grid-rows-3 gap-4">
                 <div className="relative rounded-2xl overflow-hidden shadow-sm group">
@@ -1005,43 +1016,43 @@ export default function PresentationSlides({ slideIndex }) {
              </div>
 
              {/* Right Side: Content */}
-             <div className="w-2/3 p-12 flex flex-col">
+             <div className="w-2/3 p-8 flex flex-col">
                 <div className="flex items-center gap-3 mb-2">
-                   <Baby className="text-[#7C1E18]" size={36} />
-                   <h2 className="text-4xl font-bold text-[#0F1C2E]">פחדי הורים</h2>
+                   <Baby className="text-[#7C1E18]" size={32} />
+                   <h2 className="text-3xl font-bold text-[#0F1C2E]">פחדי הורים</h2>
                 </div>
-                <h3 className="text-xl text-gray-500 font-medium mb-10">קבוצה קטנה (5 הופעות) עם השפעה גדולה — 80% מהפחד מכוון ל-Remilk</h3>
+                <h3 className="text-lg text-gray-500 font-medium mb-6">קבוצה קטנה (5 הופעות) עם השפעה גדולה — 80% מהפחד מכוון למותג א</h3>
 
                 {/* Quotes List */}
-                <div className="flex flex-col gap-4 mb-10 flex-grow">
+                <div className="flex flex-col gap-3 mb-6 flex-grow">
                    {[
                      '"לא נותנת לילדים שלי."',
                      '"מסוכן לילדים."',
                      '"לא מתאים לילדים בכלל."'
                    ].map((text, i) => (
-                     <div key={i} className="bg-white border border-red-100 p-5 rounded-xl shadow-sm flex items-center gap-4">
-                        <div className="bg-red-50 p-3 rounded-full text-[#7C1E18]"><ShieldAlert size={20} /></div>
-                        <p className="text-2xl font-bold text-gray-800">{text}</p>
+                     <div key={i} className="bg-white border border-red-100 p-4 rounded-xl shadow-sm flex items-center gap-3">
+                        <div className="bg-red-50 p-2 rounded-full text-[#7C1E18]"><ShieldAlert size={18} /></div>
+                        <p className="text-xl font-bold text-gray-800">{text}</p>
                      </div>
                    ))}
                 </div>
 
-                 {/* Stickers */}
-                 <div className="flex gap-4 mb-8">
-                    <div className="bg-[#0F1C2E] text-white rounded-xl px-6 py-3 text-lg font-bold shadow-sm flex items-center gap-3">
-                        <span>Remilk</span>
-                        <span className="bg-white/20 px-2 py-0.5 rounded text-sm">4</span>
+                 {/* Brand Bars - HIGHLY VISIBLE */}
+                 <div className="mb-6">
+                    <div className="flex justify-between text-base font-bold text-gray-700 mb-3">
+                       <span>מותג א (4)</span>
+                       <span>מותג ב (1)</span>
                     </div>
-                    <div className="bg-[#3CC4C7] text-white rounded-xl px-6 py-3 text-lg font-bold shadow-sm flex items-center gap-3">
-                        <span>Cowfree</span>
-                        <span className="bg-white/20 px-2 py-0.5 rounded text-sm">1</span>
+                    <div className="h-16 w-full bg-gray-200 rounded-xl overflow-hidden flex shadow-lg border-2 border-gray-300">
+                       <div className="h-full bg-[#0F1C2E] flex items-center justify-center text-white font-bold text-2xl" style={{width: '80%'}}>4</div>
+                       <div className="h-full bg-[#3CC4C7] flex items-center justify-center text-white font-bold text-2xl" style={{width: '20%'}}>1</div>
                     </div>
                  </div>
 
                 {/* Insight Box */}
-                <div className="bg-[#FFF7F0] border-l-4 border-[#ffb3b3] p-6 rounded-r-xl shadow-sm mt-auto">
-                    <p className="text-xl leading-relaxed text-[#7C1E18]">
-                      <span className="font-bold">תובנה:</span> תגובות קיצוניות שמייצרות אפקט של "סכנה לילדים". הפחד הזה מופיע כמעט רק מול Remilk ומזין את תמת הכימיות.
+                <div className="bg-[#FFF7F0] border-l-4 border-[#ffb3b3] p-4 rounded-r-xl shadow-sm mt-auto">
+                    <p className="text-base leading-relaxed text-[#7C1E18]">
+                      <span className="font-bold">תובנה:</span> תגובות קיצוניות שמייצרות אפקט של "סכנה לילדים". הפחד הזה מופיע כמעט רק מול מותג א ומזין את תמת הכימיות.
                     </p>
                 </div>
              </div>
@@ -1051,7 +1062,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 17 (Was 15): גאווה ישראלית
       case 17:
         return (
-          <div className="h-full flex overflow-hidden">
+          <div className="h-full flex overflow-hidden" dir="rtl">
              {/* Left Side: Images Strip */}
              <div className="w-1/3 h-full bg-gray-50 border-l border-gray-100 p-4 grid grid-rows-3 gap-4">
                 <div className="relative rounded-2xl overflow-hidden shadow-sm group">
@@ -1069,43 +1080,43 @@ export default function PresentationSlides({ slideIndex }) {
              </div>
 
              {/* Right Side: Content */}
-             <div className="w-2/3 p-12 flex flex-col">
+             <div className="w-2/3 p-8 flex flex-col">
                 <div className="flex items-center gap-3 mb-2">
-                   <Flag className="text-[#0F1C2E]" size={32} />
-                   <h2 className="text-4xl font-bold text-[#0F1C2E]">גאווה ישראלית</h2>
+                   <Flag className="text-[#0F1C2E]" size={28} />
+                   <h2 className="text-3xl font-bold text-[#0F1C2E]">גאווה ישראלית</h2>
                 </div>
-                <h3 className="text-xl text-gray-500 font-medium mb-10">29 הופעות של פטריוטיות: הצרכנים רואים ב–Remilk "הובלה ישראלית לעולם"</h3>
+                <h3 className="text-lg text-gray-500 font-medium mb-6">29 הופעות של פטריוטיות: הצרכנים רואים במותג א "הובלה ישראלית לעולם"</h3>
 
                 {/* Quotes List - Cleaner Layout */}
-                <div className="flex flex-col gap-4 mb-10 flex-grow">
+                <div className="flex flex-col gap-3 mb-6 flex-grow">
                    {[
                      '"חדשנות ישראלית!"',
                      '"כחול־לבן."',
                      '"ישראל מובילה את העולם!"'
                    ].map((text, i) => (
-                     <div key={i} className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm flex items-center gap-4 hover:border-[#4DA3FF] transition-colors">
-                        <div className="bg-blue-50 p-3 rounded-full text-[#4DA3FF]"><Quote size={20} fill="currentColor" /></div>
-                        <p className="text-2xl font-bold text-gray-800">{text}</p>
+                     <div key={i} className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm flex items-center gap-3 hover:border-[#4DA3FF] transition-colors">
+                        <div className="bg-blue-50 p-2 rounded-full text-[#4DA3FF]"><Quote size={18} fill="currentColor" /></div>
+                        <p className="text-xl font-bold text-gray-800">{text}</p>
                      </div>
                    ))}
                 </div>
 
                 {/* Brand Comparison Bar */}
-                <div className="mb-10">
+                <div className="mb-6">
                    <div className="flex justify-between text-sm font-bold text-gray-500 mb-2">
-                      <span>Remilk (25)</span>
-                      <span>Cowfree (4)</span>
+                      <span>מותג א (25)</span>
+                      <span>מותג ב (4)</span>
                    </div>
-                   <div className="h-6 w-full bg-gray-100 rounded-full overflow-hidden flex">
-                      <div className="h-full bg-[#0F1C2E]" style={{width: '86%'}}></div>
-                      <div className="h-full bg-[#3CC4C7]" style={{width: '14%'}}></div>
+                   <div className="h-10 w-full bg-gray-100 rounded-lg overflow-hidden flex shadow-inner">
+                      <div className="h-full bg-[#0F1C2E] flex items-center justify-center text-white font-bold text-lg" style={{width: '86%'}}>25</div>
+                      <div className="h-full bg-[#3CC4C7] flex items-center justify-center text-white font-bold text-lg" style={{width: '14%'}}>4</div>
                    </div>
                 </div>
 
                 {/* Insight Box */}
-                <div className="bg-[#E3F2FD] border-l-4 border-[#4DA3FF] p-6 rounded-r-xl shadow-sm">
-                    <p className="text-xl leading-relaxed text-[#0F1C2E]">
-                      <span className="font-bold">תובנה אסטרטגית:</span> Remilk יכול לבנות את הנרטיב 'ישראל מייצרת את העתיד', אך כיום הוא נתפס כחדשנות טכנולוגית ולא כחוויית טעם.
+                <div className="bg-[#E3F2FD] border-l-4 border-[#4DA3FF] p-4 rounded-r-xl shadow-sm">
+                    <p className="text-base leading-relaxed text-[#0F1C2E]">
+                      <span className="font-bold">תובנה אסטרטגית:</span> מותג א יכול לבנות את הנרטיב 'ישראל מייצרת את העתיד', אך כיום הוא נתפס כחדשנות טכנולוגית ולא כחוויית טעם.
                     </p>
                 </div>
              </div>
@@ -1115,7 +1126,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 18 (Was 16): דיסאינפורמציה
       case 18:
         return (
-          <div className="h-full p-12 flex flex-col items-center justify-center">
+          <div className="h-full p-8 flex flex-col items-center justify-center" dir="rtl">
              <div className="text-center space-y-8 w-full max-w-4xl">
                <ShieldAlert className="mx-auto text-gray-700" size={80} strokeWidth={1} />
                <h2 className="text-4xl font-bold text-harmonyDark">המאבק על האמת: דיסאינפורמציה כחסם אימון</h2>
@@ -1158,9 +1169,9 @@ export default function PresentationSlides({ slideIndex }) {
               <div className="w-full max-w-6xl px-4">
                 {/* Header Row */}
                 <div className="grid grid-cols-[2fr_1.5fr_2fr] gap-6 mb-4 pb-3 border-b-2 border-gray-200">
-                   <div className="text-right text-xl font-bold text-[#0F1C2E]">Remilk</div>
+                   <div className="text-right text-xl font-bold text-[#0F1C2E]">מותג א</div>
                    <div className="text-center text-xl font-bold text-gray-700">נושא</div>
-                   <div className="text-left text-xl font-bold text-[#3CC4C7]">Cowfree</div>
+                   <div className="text-left text-xl font-bold text-[#3CC4C7]">מותג ב</div>
                 </div>
                 
                 {/* Data Rows */}
@@ -1198,7 +1209,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 20 (Was 18): WHAT → SO WHAT → NOW WHAT
       case 20:
         return (
-          <div className="h-full px-6 py-5 flex flex-col overflow-hidden">
+          <div className="h-full px-6 py-5 flex flex-col overflow-hidden" dir="rtl">
             <h2 className="text-3xl font-bold mb-4 text-center text-harmonyDark">מפת דרכים אסטרטגית: שני מותגים, שני נתיבים להצלחה</h2>
             
             <div className="grid grid-cols-2 gap-6 flex-grow overflow-auto">
@@ -1207,7 +1218,7 @@ export default function PresentationSlides({ slideIndex }) {
               <div className="flex flex-col gap-3 border-l-4 border-[#0F1C2E] pl-4">
                 <div className="flex items-center gap-2 text-[#0F1C2E] mb-1">
                   <div className="bg-[#0F1C2E] text-white p-1.5 rounded-lg"><Atom size={24}/></div>
-                  <h3 className="text-2xl font-bold">Remilk</h3>
+                  <h3 className="text-2xl font-bold">מותג א</h3>
                 </div>
                 
                 {/* Status */}
@@ -1233,7 +1244,7 @@ export default function PresentationSlides({ slideIndex }) {
                 {/* Action Plan */}
                 <div className="bg-[#0F1C2E] p-4 rounded-xl text-white mt-auto">
                    <h4 className="flex items-center gap-2 font-bold text-base text-blue-200 mb-1.5">
-                     <ArrowRight size={16}/> הפעולה הנדרשת
+                     הפעולה הנדרשת <ArrowLeft size={16}/>
                    </h4>
                    <ul className="space-y-1.5 text-sm leading-relaxed">
                      <li>• <strong>Rebranding לשפה:</strong> מעבר מ"חלב מעבדה" ל"חלב נקי" / "חלב העתיד".</li>
@@ -1247,7 +1258,7 @@ export default function PresentationSlides({ slideIndex }) {
               <div className="flex flex-col gap-3 border-l-4 border-[#3CC4C7] pl-4" dir="rtl">
                 <div className="flex items-center gap-2 text-[#3CC4C7] mb-1">
                   <div className="bg-[#3CC4C7] text-white p-1.5 rounded-lg"><Utensils size={24}/></div>
-                  <h3 className="text-2xl font-bold">Cowfree</h3>
+                  <h3 className="text-2xl font-bold">מותג ב</h3>
                 </div>
 
                 {/* Status */}
@@ -1273,7 +1284,7 @@ export default function PresentationSlides({ slideIndex }) {
                 {/* Action Plan */}
                 <div className="bg-[#3CC4C7] p-4 rounded-xl text-white mt-auto">
                    <h4 className="flex items-center gap-2 font-bold text-base text-teal-100 mb-1.5">
-                     <ArrowRight size={16}/> הפעולה הנדרשת
+                     הפעולה הנדרשת <ArrowLeft size={16}/>
                    </h4>
                    <ul className="space-y-1.5 text-sm leading-relaxed">
                      <li>• <strong>הפצה ונגישות:</strong> פתרון הבעיה הלוגיסטית להגעה למדפים.</li>
@@ -1291,7 +1302,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 21 (Was 19): ערך Harmony
       case 21:
         return (
-          <div className="h-full p-12 flex flex-col items-center justify-center bg-gray-50">
+          <div className="h-full p-12 flex flex-col items-center justify-center bg-gray-50" dir="rtl">
              <h2 className="text-4xl font-bold text-harmonyBlue mb-12">הערך המוסף של Harmony AI</h2>
              <div className="grid grid-cols-2 gap-8 max-w-4xl">
                {[
@@ -1312,7 +1323,7 @@ export default function PresentationSlides({ slideIndex }) {
       // 🟦 שקף 22 (Was 20): הצעת פיילוט / Ask Harmony
       case 22:
         return (
-          <div className="h-full w-full flex bg-[#F8FAFC] overflow-hidden relative">
+          <div className="h-full w-full flex bg-[#F8FAFC] overflow-hidden relative" dir="rtl">
             
             {/* Ambient Background Elements */}
             <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-200/20 rounded-full blur-3xl z-0"></div>

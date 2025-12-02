@@ -52,6 +52,23 @@ To stop the running containers:
 docker-compose down
 ```
 
+## 🏃‍♂️ Running Locally (No Docker)
+
+If you prefer to run the project directly on your machine (faster for development):
+
+1. **Prerequisites**:
+   - Python 3.11+
+   - Node.js 18+
+   - `credentials.json` in the project root
+
+2. **Run the local script**:
+   ```bash
+   chmod +x run_local.sh
+   ./run_local.sh
+   ```
+
+This will set up a virtual environment, install dependencies, and start both servers.
+
 ## 📝 Viewing Logs
 
 To see what's happening in the containers:

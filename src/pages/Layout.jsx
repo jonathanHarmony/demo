@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Home, Zap, FolderOpen, Clock, Settings, User, Globe, Lightbulb, ChevronDown, Radio } from "lucide-react";
+import { Home, Zap, FolderOpen, Clock, Settings, User, Globe, Lightbulb, ChevronDown, Radio, LayoutGrid } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -109,6 +109,16 @@ function LayoutContent({ children, currentPageName }) {
               >
                 <Radio className="w-3.5 h-3.5" />
                 Signals Hub
+              </Link>
+              <Link
+                to={createPageUrl("QuickBriefWorkspace")}
+                className={`flex items-center gap-2 px-3 py-2 text-xs rounded transition-colors ${isRTL ? 'flex-row-reverse justify-end text-right' : ''} ${location.pathname === createPageUrl("QuickBriefWorkspace")
+                  ? 'bg-slate-100 text-slate-900 font-medium'
+                  : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                {isRTL ? 'מרחב עבודה' : 'Canvas Workspace'}
               </Link>
             </div>
           </div>
