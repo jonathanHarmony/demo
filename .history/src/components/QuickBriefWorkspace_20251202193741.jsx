@@ -1572,7 +1572,7 @@ const QuickBriefWorkspace = () => {
     };
 
     return (
-        <div className="flex bg-white" style={{ height: 'calc(100vh - 56px)' }}>
+        <div className="flex h-screen bg-white">
             {/* Research Assistant Sidebar */}
             <ResearchAssistant ref={chatRef} sessionId="quickbrief" />
 
@@ -1622,6 +1622,13 @@ const QuickBriefWorkspace = () => {
                                             >
                                                 <FileType size={16} className="text-blue-500" />
                                                 Word Document
+                                            </button>
+                                            <button
+                                                onClick={() => handleExport('notion')}
+                                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                                            >
+                                                <Grid3x3 size={16} className="text-slate-700" />
+                                                Notion
                                             </button>
                                         </div>
                                     </>

@@ -8,8 +8,7 @@ import {
     Plus, Trash2, Grid3x3, Type, Heading1, Play, Code, Layout, Sparkles,
     CheckCircle, AlertTriangle, TrendingUp, Star, Info, ThumbsUp, ThumbsDown,
     BarChart2, PieChart as PieIcon, Target, MessageCircle, DollarSign, Zap,
-    Wrench, Shield, Battery, Smartphone, LineChart as LineChartIcon, GripVertical, Pencil,
-    Download, RefreshCw, FileText, Presentation, FileType, ChevronDown
+    Wrench, Shield, Battery, Smartphone, LineChart as LineChartIcon, GripVertical, Pencil
 } from 'lucide-react';
 import ResearchAssistant from './ResearchAssistant';
 
@@ -1205,8 +1204,8 @@ const CanvasElement = ({ element, elementIndex, onUpdate, onDelete, isHovered, o
 };
 
 // --- Slide Block Component ---
-const SlideBlock = ({ slide, index, onUpdate, onAddElement, onDeleteElement, onUpdateElement, onRun, isActive, onReorder, dragHandleProps, onTagClick, onDeleteBlock, isNew }) => {
-    const [activeTab, setActiveTab] = useState(isNew ? 'prompts' : 'preview');
+const SlideBlock = ({ slide, index, onUpdate, onAddElement, onDeleteElement, onUpdateElement, onRun, isActive, onReorder, dragHandleProps, onTagClick }) => {
+    const [activeTab, setActiveTab] = useState('preview');
     const [hoveredElement, setHoveredElement] = useState(null);
     const [showAddMenu, setShowAddMenu] = useState(false);
 
@@ -1235,13 +1234,6 @@ const SlideBlock = ({ slide, index, onUpdate, onAddElement, onDeleteElement, onU
                         title="Click to reference this block in chat"
                     >
                         + Tag
-                    </button>
-                    <button
-                        onClick={() => onDeleteBlock && onDeleteBlock(slide.id)}
-                        className="px-2 py-1 text-xs text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                        title="Delete this block"
-                    >
-                        <Trash2 size={12} />
                     </button>
                 </div>
                 
@@ -1440,21 +1432,7 @@ const SlideBlock = ({ slide, index, onUpdate, onAddElement, onDeleteElement, onU
 const QuickBriefWorkspace = () => {
     const [slides, setSlides] = useState(initialSlides);
     const [isRuning, setIsRunning] = useState(false);
-    const [newSlideIds, setNewSlideIds] = useState(new Set());
-    const [showExportMenu, setShowExportMenu] = useState(false);
     const chatRef = useRef(null);
-
-    // Export handlers (placeholder functions)
-    const handleExport = (format) => {
-        console.log(`Exporting as ${format}...`);
-        setShowExportMenu(false);
-        // TODO: Implement actual export logic
-    };
-
-    const handleRerun = () => {
-        console.log('Rerunning all blocks...');
-        // TODO: Implement rerun logic
-    };
 
     // Handle block/element click to insert tag
     const handleTagClick = (tag) => {
@@ -1465,31 +1443,16 @@ const QuickBriefWorkspace = () => {
 
     // Slide Management
     const addSlide = () => {
-        const newId = `slide-${Date.now()}`;
         const newSlide = {
-            id: newId,
-            topic: 'New Analysis Block',
+            id: `slide-${Date.now()}`,
+            topic: '',
             prompts: '',
             code: '',
-            elements: []
+            elements: [
+                { id: `intro-${Date.now()}`, type: 'text', content: 'Start analyzing...' }
+            ]
         };
         setSlides([...slides, newSlide]);
-        setNewSlideIds(prev => new Set([...prev, newId]));
-    };
-
-    const deleteSlide = (slideId) => {
-        if (slides.length <= 1) {
-            alert('Cannot delete the last block');
-            return;
-        }
-        if (confirm('Are you sure you want to delete this block?')) {
-            setSlides(slides.filter(s => s.id !== slideId));
-            setNewSlideIds(prev => {
-                const next = new Set(prev);
-                next.delete(slideId);
-                return next;
-            });
-        }
     };
 
     const updateSlide = (id, updates) => {
@@ -1572,71 +1535,16 @@ const QuickBriefWorkspace = () => {
     };
 
     return (
-        <div className="flex bg-white" style={{ height: 'calc(100vh - 56px)' }}>
+        <div className="flex h-screen bg-white">
             {/* Research Assistant Sidebar */}
             <ResearchAssistant ref={chatRef} sessionId="quickbrief" />
 
             {/* Main Content Area */}
             <div className="flex-1 overflow-y-auto bg-white">
                 <div className="max-w-5xl mx-auto px-12 py-12">
-                    <div className="mb-12 flex items-start justify-between">
-                        <div>
-                            <h1 className="text-4xl font-bold text-slate-900 mb-3">Oral-B IO Models Analysis</h1>
-                            <p className="text-slate-500 text-lg">Interactive workspace for Oral-B iO customer satisfaction analysis.</p>
-                        </div>
-                        
-                        {/* Action Buttons */}
-                        <div className="flex items-center gap-3">
-                            {/* Export Dropdown */}
-                            <div className="relative">
-                                <button
-                                    onClick={() => setShowExportMenu(!showExportMenu)}
-                                    className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
-                                >
-                                    <Download size={16} />
-                                    <span className="font-medium text-sm">Export</span>
-                                    <ChevronDown size={14} className={`transition-transform ${showExportMenu ? 'rotate-180' : ''}`} />
-                                </button>
-                                
-                                {showExportMenu && (
-                                    <>
-                                        <div className="fixed inset-0 z-10" onClick={() => setShowExportMenu(false)} />
-                                        <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-2">
-                                            <button
-                                                onClick={() => handleExport('pdf')}
-                                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-                                            >
-                                                <FileText size={16} className="text-red-500" />
-                                                PDF Document
-                                            </button>
-                                            <button
-                                                onClick={() => handleExport('presentation')}
-                                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-                                            >
-                                                <Presentation size={16} className="text-orange-500" />
-                                                Presentation
-                                            </button>
-                                            <button
-                                                onClick={() => handleExport('doc')}
-                                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-                                            >
-                                                <FileType size={16} className="text-blue-500" />
-                                                Word Document
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                            
-                            {/* Rerun Button */}
-                            <button
-                                onClick={handleRerun}
-                                className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors shadow-sm"
-                            >
-                                <RefreshCw size={16} />
-                                <span className="font-medium text-sm">Rerun</span>
-                            </button>
-                        </div>
+                    <div className="mb-12">
+                        <h1 className="text-4xl font-bold text-slate-900 mb-3">Oral-B IO Models Analysis</h1>
+                        <p className="text-slate-500 text-lg">Interactive workspace for Oral-B iO customer satisfaction analysis.</p>
                     </div>
 
                     <DragDropContext onDragEnd={handleDragEnd}>
@@ -1665,8 +1573,6 @@ const QuickBriefWorkspace = () => {
                                                         onRun={handleRunBlock}
                                                         dragHandleProps={provided.dragHandleProps}
                                                         onTagClick={handleTagClick}
-                                                        onDeleteBlock={deleteSlide}
-                                                        isNew={newSlideIds.has(slide.id)}
                                                     />
                                                 </div>
                                             )}

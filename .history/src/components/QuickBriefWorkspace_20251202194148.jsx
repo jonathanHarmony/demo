@@ -1572,7 +1572,7 @@ const QuickBriefWorkspace = () => {
     };
 
     return (
-        <div className="flex bg-white" style={{ height: 'calc(100vh - 56px)' }}>
+        <div className="flex h-screen overflow-hidden bg-white">
             {/* Research Assistant Sidebar */}
             <ResearchAssistant ref={chatRef} sessionId="quickbrief" />
 
