@@ -120,7 +120,6 @@ const DemoBlock = ({ block, index, isAnalyzing }) => {
 
 // Demo Workspace Component - Uses original layout design
 function DemoQuickBriefWorkspace() {
-    const [question, setQuestion] = useState('');
     const [hasStarted, setHasStarted] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [chatMessages, setChatMessages] = useState([]);
@@ -131,13 +130,11 @@ function DemoQuickBriefWorkspace() {
     const { selectedModel } = useModelSelector();
 
     const startDemo = () => {
-        if (!question.trim()) return;
-        
         setHasStarted(true);
         setIsAnalyzing(true);
         
         // Add user question
-        setChatMessages([{ role: 'user', content: question }]);
+        setChatMessages([{ role: 'user', content: DEMO_QUESTION }]);
         
         // Progress animation
         const progressInterval = setInterval(() => {
@@ -187,10 +184,10 @@ function DemoQuickBriefWorkspace() {
 
                     <div className="w-full max-w-4xl">
                         <EnhancedCompactAskBar
-                            value={question}
-                            onChange={setQuestion}
+                            value={DEMO_QUESTION}
+                            onChange={() => {}}
                             onGenerate={startDemo}
-                            disabled={!question.trim()}
+                            disabled={false}
                             isGenerating={false}
                         />
                     </div>

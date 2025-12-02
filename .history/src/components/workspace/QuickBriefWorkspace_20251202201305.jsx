@@ -187,10 +187,10 @@ function DemoQuickBriefWorkspace() {
 
                     <div className="w-full max-w-4xl">
                         <EnhancedCompactAskBar
-                            value={question}
-                            onChange={setQuestion}
+                            value={DEMO_QUESTION}
+                            onChange={() => {}}
                             onGenerate={startDemo}
-                            disabled={!question.trim()}
+                            disabled={false}
                             isGenerating={false}
                         />
                     </div>

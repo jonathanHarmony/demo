@@ -22,6 +22,7 @@ import { useModelSelector } from "../shared/ModelSelectorContext";
 
 // ============ DEMO MODE CONFIGURATION ============
 const USE_DEMO_MODE = true;
+const DEMO_QUESTION = "What is the customer satisfaction for Oral-B iO models?";
 
 // Demo Chat Messages Flow
 const DEMO_CHAT_MESSAGES = [
@@ -70,15 +71,123 @@ const DEMO_BLOCKS = [
     },
 ];
 
-// Demo Block Component for the right panel
+// Demo Research Assistant Component
+const DemoResearchAssistant = ({ messages, isTyping, loadingMessage }) => {
+    const scrollRef = useRef(null);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages, isTyping]);
+
+    return (
+        <div className="w-96 flex flex-col h-full overflow-hidden bg-white border-r border-slate-200">
+            {/* Header */}
+            <div className="shrink-0 p-4 border-b border-slate-100 flex items-center justify-between bg-white">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-slate-100 rounded-full">
+                        <Sparkles className="w-5 h-5 text-slate-600" />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-slate-800 text-sm">Research Assistant</h3>
+                        <p className="text-xs text-slate-500">Connected to analysis data</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-slate-50/50">
+                <div className="space-y-4">
+                    {messages.map((msg, idx) => (
+                        <motion.div
+                            key={idx}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex gap-3"
+                        >
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
+                                msg.role === 'user' 
+                                    ? 'bg-slate-900 text-white' 
+                                    : 'bg-white border border-slate-200 text-slate-600'
+                            }`}>
+                                {msg.role === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
+                            </div>
+                            <div className="flex-1 space-y-1">
+                                <div className={`p-3 rounded-xl text-sm leading-relaxed ${
+                                    msg.role === 'user'
+                                        ? 'bg-slate-900 text-white rounded-tl-none'
+                                        : 'bg-white border border-slate-200 text-slate-700 rounded-tl-none'
+                                }`}>
+                                    {msg.type === 'status' ? (
+                                        <div className="flex items-center gap-2">
+                                            <Loader2 className="w-4 h-4 animate-spin text-slate-500" />
+                                            <span>{msg.content}</span>
+                                        </div>
+                                    ) : (
+                                        msg.content
+                                    )}
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+
+                    {isTyping && (
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="flex gap-3 items-center pl-2"
+                        >
+                            <div className="flex items-center gap-2">
+                                <div className="relative w-4 h-4">
+                                    <div className="absolute inset-0 rounded-full bg-slate-400 animate-ping opacity-75"></div>
+                                    <div className="absolute inset-0 rounded-full bg-slate-500"></div>
+                                </div>
+                                <span className="text-sm text-slate-500">
+                                    {loadingMessage}
+                                </span>
+                            </div>
+                        </motion.div>
+                    )}
+                    <div ref={scrollRef} />
+                </div>
+            </div>
+
+            {/* Input - Disabled during demo */}
+            <div className="shrink-0 p-4 bg-white border-t border-slate-100">
+                <div className="flex items-end gap-2">
+                    <div className="flex-1 min-h-[44px] rounded-xl border border-slate-200 bg-slate-100 px-3 py-2 opacity-50">
+                        <textarea
+                            placeholder="Analysis in progress..."
+                            className="w-full bg-transparent border-none focus:ring-0 focus:outline-none resize-none text-sm p-0"
+                            rows={1}
+                            disabled
+                        />
+                    </div>
+                    <button
+                        disabled
+                        className="bg-slate-300 text-white rounded-full h-10 w-10 shrink-0 flex items-center justify-center cursor-not-allowed"
+                    >
+                        <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Demo Block Component
 const DemoBlock = ({ block, index, isAnalyzing }) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm"
+            className="w-full bg-white group/slide relative"
         >
+            {/* Full Width Divider */}
+            <div className="w-full h-px bg-slate-200 mb-8"></div>
+            
             {/* Block Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -87,40 +196,68 @@ const DemoBlock = ({ block, index, isAnalyzing }) => {
                         <span className="text-xs font-medium text-slate-500">Block {index + 1}</span>
                     </div>
                 </div>
+                <button className="flex items-center gap-2 px-4 py-2 bg-slate-200 text-slate-400 rounded-lg cursor-not-allowed text-sm">
+                    <Play size={14} />
+                    Run Block
+                </button>
             </div>
 
             {/* Block Title & Subtitle */}
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold text-slate-900 mb-1">{block.title}</h3>
-                <p className="text-sm text-slate-500">{block.subtitle}</p>
+            <div className="mb-6">
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">{block.title}</h2>
+                <p className="text-slate-500">{block.subtitle}</p>
             </div>
 
-            {/* Prompt */}
-            <div className="bg-slate-50 rounded-lg p-4 mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-slate-500" />
-                    <span className="text-xs font-medium text-slate-600">Prompt</span>
+            {/* Prompt Running State */}
+            <div className="bg-slate-50 rounded-xl border border-slate-200 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 bg-slate-200 rounded-lg">
+                        <Sparkles className="w-4 h-4 text-slate-600" />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700">Prompt</span>
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed">{block.prompts}</p>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">{block.prompts}</p>
+                
+                {isAnalyzing && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex items-center gap-3 pt-4 border-t border-slate-200"
+                    >
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-500" />
+                        <span className="text-sm text-slate-500">Running analysis...</span>
+                    </motion.div>
+                )}
             </div>
-            
-            {isAnalyzing && (
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex items-center gap-2 text-slate-500"
-                >
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm">Running analysis...</span>
-                </motion.div>
-            )}
         </motion.div>
     );
 };
 
-// Demo Workspace Component - Uses original layout design
+// Analysis Progress Bar Component
+const AnalysisProgressBar = ({ progress, estimatedTime }) => {
+    return (
+        <div className="bg-white border-b border-slate-200 px-6 py-3">
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-slate-600" />
+                    <span className="text-sm font-medium text-slate-700">Analysis in Progress</span>
+                </div>
+                <span className="text-sm text-slate-500">Estimated Time: {estimatedTime}</span>
+            </div>
+            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <motion.div 
+                    className="h-full bg-slate-900 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 0.5 }}
+                />
+            </div>
+        </div>
+    );
+};
+
+// Demo Workspace Component
 function DemoQuickBriefWorkspace() {
-    const [question, setQuestion] = useState('');
     const [hasStarted, setHasStarted] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [chatMessages, setChatMessages] = useState([]);
@@ -128,16 +265,13 @@ function DemoQuickBriefWorkspace() {
     const [progress, setProgress] = useState(0);
     const [currentLoadingMessage, setCurrentLoadingMessage] = useState('');
     const { isRTL } = useLanguage();
-    const { selectedModel } = useModelSelector();
 
     const startDemo = () => {
-        if (!question.trim()) return;
-        
         setHasStarted(true);
         setIsAnalyzing(true);
         
         // Add user question
-        setChatMessages([{ role: 'user', content: question }]);
+        setChatMessages([{ role: 'user', content: DEMO_QUESTION }]);
         
         // Progress animation
         const progressInterval = setInterval(() => {
@@ -170,7 +304,7 @@ function DemoQuickBriefWorkspace() {
         });
     };
 
-    // Initial state - use original EnhancedCompactAskBar design
+    // Initial state - show question input
     if (!hasStarted) {
         return (
             <div className="fixed inset-0 top-14 flex bg-[#FAFAFA]" style={{ left: isRTL ? '0' : '256px', right: isRTL ? '256px' : '0' }}>
@@ -181,141 +315,102 @@ function DemoQuickBriefWorkspace() {
                         className="text-center mb-16"
                     >
                         <h1 className="text-4xl font-semibold text-slate-900 mb-2">
-                            Ask Harmony anything..
+                            What would you like to research?
                         </h1>
                     </motion.div>
 
-                    <div className="w-full max-w-4xl">
-                        <EnhancedCompactAskBar
-                            value={question}
-                            onChange={setQuestion}
-                            onGenerate={startDemo}
-                            disabled={!question.trim()}
-                            isGenerating={false}
-                        />
+                    <div className="w-full max-w-2xl">
+                        <div className="bg-white rounded-2xl border border-slate-200 shadow-lg p-4">
+                            <div className="flex items-end gap-3">
+                                <textarea
+                                    value={DEMO_QUESTION}
+                                    readOnly
+                                    className="flex-1 text-lg bg-transparent border-none focus:ring-0 focus:outline-none resize-none text-slate-900"
+                                    rows={2}
+                                />
+                                <button
+                                    onClick={startDemo}
+                                    className="bg-slate-900 hover:bg-slate-800 text-white rounded-full h-12 w-12 shrink-0 flex items-center justify-center transition-colors"
+                                >
+                                    <ArrowUp className="w-6 h-6" strokeWidth={2.5} />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         );
     }
 
-    // Analysis in progress state - original layout with progress in chat
+    // Analysis in progress state
     return (
-        <div className="fixed inset-0 top-14 flex bg-[#FAFAFA]" style={{ left: isRTL ? '0' : '256px', right: isRTL ? '256px' : '0' }}>
-            {/* Left: Conversation with Progress */}
-            <div className="w-[400px] lg:w-[450px] shrink-0 bg-white flex flex-col border-r border-slate-200 h-full">
-                {/* Conversation Messages */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                    {chatMessages.map((message, idx) => (
-                        <div key={idx} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[85%] ${message.role === 'user' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-900'} rounded-lg px-4 py-3`}>
-                                {message.role === 'assistant' && (
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-                                        <span className="text-xs font-medium text-slate-600">Harmony</span>
-                                    </div>
-                                )}
-                                <div className="text-sm leading-relaxed whitespace-pre-line">
-                                    {message.type === 'status' ? (
-                                        <div className="flex items-center gap-2">
-                                            <Loader2 className="w-4 h-4 animate-spin" />
-                                            <span>{message.content}</span>
-                                        </div>
-                                    ) : (
-                                        message.content
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+        <div className="fixed inset-0 top-14 flex flex-col bg-white" style={{ left: isRTL ? '0' : '256px', right: isRTL ? '256px' : '0' }}>
+            {/* Progress Bar */}
+            <AnalysisProgressBar progress={progress} estimatedTime="3h" />
+            
+            <div className="flex flex-1 overflow-hidden">
+                {/* Research Assistant Sidebar */}
+                <DemoResearchAssistant 
+                    messages={chatMessages}
+                    isTyping={isAnalyzing}
+                    loadingMessage={currentLoadingMessage}
+                />
 
-                    {/* Progress Bar inside chat - like DeepResearch */}
-                    {isAnalyzing && (
-                        <div className="flex justify-start">
-                            <div className="bg-slate-100 rounded-lg px-4 py-3 min-w-[350px]">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-                                    <span className="text-xs font-medium text-slate-600">Harmony</span>
-                                </div>
+                {/* Main Content Area */}
+                <div className="flex-1 overflow-y-auto bg-white">
+                    <div className="max-w-5xl mx-auto px-12 py-12">
+                        {/* Header */}
+                        <div className="mb-12 flex items-start justify-between">
+                            <div>
+                                <h1 className="text-4xl font-bold text-slate-900 mb-3">Oral-B IO Models Analysis</h1>
+                                <p className="text-slate-500 text-lg">Interactive workspace for Oral-B iO customer satisfaction analysis.</p>
+                            </div>
+                            
+                            {/* Action Buttons - Disabled during analysis */}
+                            <div className="flex items-center gap-3 opacity-50">
+                                <button
+                                    disabled
+                                    className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-400 rounded-lg cursor-not-allowed"
+                                >
+                                    <Download size={16} />
+                                    <span className="font-medium text-sm">Export</span>
+                                    <ChevronDown size={14} />
+                                </button>
                                 
-                                {/* Progress Section */}
-                                <div className="space-y-3">
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="text-slate-700 font-medium">Analysis in Progress</span>
-                                        <span className="text-slate-500">Est. Time: 3h</span>
-                                    </div>
-                                    <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                                        <motion.div 
-                                            className="h-full bg-teal-500 rounded-full"
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${progress}%` }}
-                                            transition={{ duration: 0.5 }}
-                                        />
-                                    </div>
-                                    <div className="flex items-center gap-2 text-slate-500 text-sm">
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        <span>{currentLoadingMessage || 'Initializing...'}</span>
-                                    </div>
-                                </div>
+                                <button
+                                    disabled
+                                    className="flex items-center gap-2 px-4 py-2 bg-slate-300 text-white rounded-lg cursor-not-allowed"
+                                >
+                                    <RefreshCw size={16} />
+                                    <span className="font-medium text-sm">Rerun</span>
+                                </button>
                             </div>
                         </div>
-                    )}
-                </div>
 
-                {/* Input at bottom - disabled during analysis */}
-                <div className="border-t border-slate-200 p-4 bg-white">
-                    <div className="mb-2 text-xs text-slate-500 px-1">
-                        💳 Each follow-up question costs 1 credit
-                    </div>
-                    <div className="flex items-end gap-3">
-                        <textarea
-                            placeholder="Analysis in progress..."
-                            className="flex-1 text-sm bg-slate-50 border border-slate-200 rounded px-3 py-2 outline-none text-slate-400 placeholder:text-slate-400 resize-none cursor-not-allowed"
-                            rows={2}
-                            disabled
-                        />
-                        <Button
-                            disabled
-                            size="sm"
-                            className="bg-slate-300 text-white h-10 cursor-not-allowed"
-                        >
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                        </Button>
+                        {/* Blocks */}
+                        <div className="space-y-16">
+                            <AnimatePresence>
+                                {visibleBlocks.map((block, index) => (
+                                    <DemoBlock 
+                                        key={block.id} 
+                                        block={block} 
+                                        index={index}
+                                        isAnalyzing={isAnalyzing}
+                                    />
+                                ))}
+                            </AnimatePresence>
+                        </div>
+
+                        {visibleBlocks.length === 0 && (
+                            <div className="flex items-center justify-center py-20">
+                                <div className="text-center">
+                                    <Loader2 className="w-8 h-8 animate-spin text-slate-400 mx-auto mb-4" />
+                                    <p className="text-slate-500">Creating analysis blocks...</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-            </div>
-
-            {/* Right: Results Preview */}
-            <div className="flex-1 overflow-y-auto p-6 bg-[#FAFAFA]">
-                <AnimatePresence mode="wait">
-                    {visibleBlocks.length > 0 ? (
-                        <motion.div
-                            key="blocks"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="space-y-4"
-                        >
-                            {visibleBlocks.map((block, index) => (
-                                <DemoBlock 
-                                    key={block.id} 
-                                    block={block} 
-                                    index={index}
-                                    isAnalyzing={isAnalyzing}
-                                />
-                            ))}
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="empty"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="flex flex-col items-center justify-center h-full text-center"
-                        >
-                            <Sparkles className="w-12 h-12 text-slate-300 mb-4" />
-                            <p className="text-slate-400">Preview will appear here</p>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </div>
         </div>
     );

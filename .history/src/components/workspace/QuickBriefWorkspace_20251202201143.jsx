@@ -22,6 +22,7 @@ import { useModelSelector } from "../shared/ModelSelectorContext";
 
 // ============ DEMO MODE CONFIGURATION ============
 const USE_DEMO_MODE = true;
+const DEMO_QUESTION = "What is the customer satisfaction for Oral-B iO models?";
 
 // Demo Chat Messages Flow
 const DEMO_CHAT_MESSAGES = [
@@ -120,7 +121,6 @@ const DemoBlock = ({ block, index, isAnalyzing }) => {
 
 // Demo Workspace Component - Uses original layout design
 function DemoQuickBriefWorkspace() {
-    const [question, setQuestion] = useState('');
     const [hasStarted, setHasStarted] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [chatMessages, setChatMessages] = useState([]);
@@ -131,13 +131,11 @@ function DemoQuickBriefWorkspace() {
     const { selectedModel } = useModelSelector();
 
     const startDemo = () => {
-        if (!question.trim()) return;
-        
         setHasStarted(true);
         setIsAnalyzing(true);
         
         // Add user question
-        setChatMessages([{ role: 'user', content: question }]);
+        setChatMessages([{ role: 'user', content: DEMO_QUESTION }]);
         
         // Progress animation
         const progressInterval = setInterval(() => {
@@ -187,10 +185,10 @@ function DemoQuickBriefWorkspace() {
 
                     <div className="w-full max-w-4xl">
                         <EnhancedCompactAskBar
-                            value={question}
-                            onChange={setQuestion}
+                            value={DEMO_QUESTION}
+                            onChange={() => {}}
                             onGenerate={startDemo}
-                            disabled={!question.trim()}
+                            disabled={false}
                             isGenerating={false}
                         />
                     </div>
