@@ -1,0 +1,38 @@
+services:
+  backend:
+    build: ./backend_py
+    container_name: harmonyai-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
+    volumes:
+      # Mount credentials
+      - ./credentials.json:/app/credentials.json:ro
+      # Mount source code for hot-reloading
+      - ./backend_py:/app/backend_py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: .
+      target: development
+    container_name: harmonyai-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
