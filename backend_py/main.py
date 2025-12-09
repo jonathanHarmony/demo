@@ -388,11 +388,38 @@ async def generate_report(request: ReportGenerateRequest, client: VertexRAGClien
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+# Deep Research Router
+deep_research_router = APIRouter(prefix="/deep-research", tags=["deep-research"])
+
+class DeepResearchRequest(BaseModel):
+    query: str
+    model_id: str = "gemini-2.5-pro"
+    history: List[Message] = []
+    report_id: str | None = None
+
+@deep_research_router.post("/query")
+async def deep_research_query_endpoint(request: DeepResearchRequest):
+    print(f"\n[DEEP RESEARCH ENDPOINT] Received query")
+    print(f"[DEEP RESEARCH ENDPOINT] Query: {request.query}")
+    
+    try:
+        client = get_or_create_rag_client(request.report_id)
+        response = client.deep_research_query(
+            query=request.query,
+            model_id=request.model_id,
+            history=request.history
+        )
+        return {"response": response}
+    except Exception as e:
+        print(f"[DEEP RESEARCH ENDPOINT ERROR] {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include Routers
 app.include_router(admin_router)
 app.include_router(chat_router)
 app.include_router(playground_router)
 app.include_router(report_router)
+app.include_router(deep_research_router)
 
 @app.get("/")
 def read_root():

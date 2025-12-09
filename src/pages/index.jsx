@@ -16,6 +16,8 @@ import Report2Page from "./Report2";
 
 import QuickBriefWorkspacePage from "./QuickBriefWorkspace";
 
+import DeepResearch from "./DeepResearch";
+
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 const PAGES = {
@@ -35,6 +37,8 @@ const PAGES = {
     Report2: Report2Page,
 
     QuickBriefWorkspace: QuickBriefWorkspacePage,
+
+    DeepResearch: DeepResearch,
 
 }
 
@@ -80,6 +84,9 @@ function PagesContent() {
                 <Route path="/report3" element={<Report2Page />} />
 
                 <Route path="/QuickBriefWorkspace" element={<QuickBriefWorkspacePage />} />
+
+                <Route path="/DeepResearch" element={<DeepResearch />} />
+
 
             </Routes>
         </Layout>

@@ -465,3 +465,66 @@ Make the data specific and relevant to the question. Return ONLY valid JSON."""
             #     return self.generate_report_components(question, model_id="gemini-2.5-pro")
             print(f"[REPORT GENERATION CRITICAL ERROR] Generation failed with model {model_id}. Error: {e}")
             raise e
+
+    def deep_research_query(self, query: str, model_id: str = "gemini-2.5-pro", history: List[dict] = None):
+        """
+        Performs a Deep Research query using Gemini 2.5 and RAG.
+        """
+        print(f"\n{'='*80}")
+        print(f"[DEEP RESEARCH] Starting query...")
+        print(f"[DEEP RESEARCH] Model: {model_id}")
+        print(f"[DEEP RESEARCH] Query: {query[:100]}...")
+        
+        # Initialize RAG tool
+        tools = []
+        if self.corpus_name:
+            print(f"[DEEP RESEARCH] Adding RAG tool with corpus: {self.corpus_name}")
+            try:
+                rag_tool = Tool.from_retrieval(
+                    retrieval=rag.Retrieval(
+                        source=rag.VertexRagStore(
+                            rag_resources=[rag.RagResource(rag_corpus=self.corpus_name)],
+                            similarity_top_k=10,  # High recall for deep research
+                            vector_distance_threshold=0.5
+                        )
+                    )
+                )
+                tools.append(rag_tool)
+            except Exception as e:
+                print(f"[DEEP RESEARCH WARNING] Failed to create RAG tool: {e}")
+        
+        system_instruction = """You are a Deep Research AI Assistant.
+        Your goal is to provide comprehensive, evidence-based answers by synthesizing information from the provided RAG data and your general knowledge.
+        
+        GUIDELINES:
+        1. **Deep Dive**: Do not settle for superficial answers. Explore the "why" and "how".
+        2. **Evidence-Based**: Prioritize information from the RAG sources (uploaded documents). Cite them implicitly by integrating the facts.
+        3. **Structure**: Use clear structure (headers, bullet points) to organize complex information.
+        4. **Synthesis**: Connect dots between different pieces of information.
+        5. **Transparency**: If information is missing in the RAG data, explicitly state that you are relying on general knowledge.
+        """
+
+        try:
+            model = GenerativeModel(
+                model_name=model_id,
+                tools=tools,
+                system_instruction=system_instruction
+            )
+            
+            chat_history = []
+            if history:
+                for msg in history:
+                    role = "model" if msg.role == "assistant" else "user"
+                    chat_history.append(Content(role=role, parts=[Part.from_text(msg.content)]))
+
+            chat = model.start_chat(history=chat_history)
+            response = chat.send_message(query)
+            
+            print(f"[DEEP RESEARCH] Response generated. Length: {len(response.text)}")
+            return response.text
+
+        except Exception as e:
+            print(f"[DEEP RESEARCH ERROR] {e}")
+            import traceback
+            traceback.print_exc()
+            raise e

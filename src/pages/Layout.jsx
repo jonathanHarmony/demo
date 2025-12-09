@@ -120,6 +120,16 @@ function LayoutContent({ children, currentPageName }) {
                 <LayoutGrid className="w-3.5 h-3.5" />
                 {isRTL ? 'מרחב עבודה' : 'Canvas Workspace'}
               </Link>
+              <Link
+                to={createPageUrl("DeepResearch")}
+                className={`flex items-center gap-2 px-3 py-2 text-xs rounded transition-colors ${isRTL ? 'flex-row-reverse justify-end text-right' : ''} ${location.pathname === createPageUrl("DeepResearch")
+                  ? 'bg-slate-100 text-slate-900 font-medium'
+                  : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+              >
+                <Lightbulb className="w-3.5 h-3.5" />
+                {isRTL ? 'מחקר מעמיק' : 'Deep Research'}
+              </Link>
             </div>
           </div>
 
