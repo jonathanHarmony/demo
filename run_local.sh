@@ -33,7 +33,18 @@ trap cleanup EXIT
 echo -e "\n${BLUE}🐍 Setting up Backend...${NC}"
 cd backend_py
 
-# Create venv if it doesn't exist
+# Export variables from .env
+if [ -f .env ]; then
+    export $(cat .env | xargs)
+fi
+
+# Set Google Credentials if file exists
+# if [ -f "credentials.json" ]; then
+#     export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/credentials.json"
+#     echo "🔑 Found credentials.json, setting GOOGLE_APPLICATION_CREDENTIALS..."
+# fi
+
+# Setup Python Virtual Environment
 if [ ! -d "venv" ]; then
     echo "Creating Python virtual environment..."
     python3 -m venv venv
@@ -47,9 +58,10 @@ echo "Installing backend dependencies..."
 pip install -r requirements.txt
 
 # Start Backend
-echo -e "${GREEN}🚀 Starting Backend Server on port 8000...${NC}"
+echo -e "\n${GREEN}🚀 Starting Backend Server on port 8000...${NC}"
 cd .. # Go back to root
 export PYTHONPATH=$(pwd)
+unset GOOGLE_APPLICATION_CREDENTIALS
 uvicorn backend_py.main:app --host 0.0.0.0 --port 8000 --reload &
 BACKEND_PID=$!
 

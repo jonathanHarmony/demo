@@ -79,7 +79,7 @@ export default function DeepResearch() {
     }
   };
 
-  const handleStartResearch = (q, sources, scope) => {
+  const handleStartResearch = async (q, sources, scope) => {
     setQuestion(q);
     setSelectedSources(sources);
     setResearchScope(scope);
@@ -94,21 +94,35 @@ export default function DeepResearch() {
     setIsProcessing(true);
     setThinkingSteps([{ id: 1, title: 'Analyzing request...', status: 'active' }]);
 
-    setTimeout(() => {
-      setThinkingSteps(prev => prev.map(s => ({ ...s, status: 'complete' })));
-      setIsProcessing(false);
-
-      // Propose Plan
-      setResearchPlan({
-        title: 'Harmony AI: Success, Problems, Clients, Usage',
-        steps: [
-          'Search Google for "Harmony AI research firm" and "Harmony AI consumer market intelligence"',
-          'Identify key reasons for Harmony\'s potential success (market momentum, competitive advantages)',
-          'Extract specific problems Harmony AI aims to solve (gap between data and decisions)',
-          'Analyze target clients and usage patterns'
-        ]
+    try {
+      const response = await fetch('http://localhost:8000/deep-research/plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: q,
+          model_id: 'gemini-2.5-flash'
+        })
       });
-    }, 1500);
+
+      const data = await response.json();
+
+      setTimeout(() => {
+        setThinkingSteps(prev => prev.map(s => ({ ...s, status: 'complete' })));
+        setIsProcessing(false);
+        if (data.plan) {
+          setResearchPlan(data.plan);
+        }
+      }, 1000); // Keep a small delay for UI smoothness
+
+    } catch (error) {
+      console.error("Plan generation error:", error);
+      setIsProcessing(false);
+      // Fallback
+      setResearchPlan({
+        title: 'Research Plan',
+        steps: ['Analyze market trends', 'Evaluate competitors', 'Assess consumer sentiment']
+      });
+    }
   };
 
   const handleStartPlan = () => {

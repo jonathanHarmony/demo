@@ -15,7 +15,7 @@ from .rag_client import VertexRAGClient
 # Configuration
 PROJECT_ID = os.getenv("PROJECT_ID", "convrt-common")
 LOCATION = os.getenv("LOCATION", "us-west1")
-CORPUS_DISPLAY_NAME = os.getenv("CORPUS_DISPLAY_NAME", "multi-csv-corpus")
+CORPUS_DISPLAY_NAME = os.getenv("CORPUS_DISPLAY_NAME", "oralb-kids-research")
 CHAT_HISTORY_DIR = os.path.join(os.path.dirname(__file__), "chat_history")
 
 # Create chat history directory if it doesn't exist
@@ -100,26 +100,29 @@ async def upload_file(
     description: str = "",
     report_id: str | None = None,
 ):
-    if not file.filename.endswith('.csv'):
-        raise HTTPException(status_code=400, detail="Only .csv files are supported")
-
     # Save to temp file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp:
+    # Preserve extension
+    ext = os.path.splitext(file.filename)[1]
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
         shutil.copyfileobj(file.file, tmp)
         tmp_path = tmp.name
 
     try:
-        # We pass the original filename as part of description or just handle it in ingest
-        # The ingest_csv uses os.path.basename(file_path) for display_name.
-        # So we might want to rename the temp file to the original name or pass display_name explicitly.
-        # Let's rename the temp file to have the original name in a temp dir.
-        
+        # Renaming to original name for better display in RAG
         temp_dir = os.path.dirname(tmp_path)
         original_name_path = os.path.join(temp_dir, file.filename)
+        # Handle case where file exists in temp
+        if os.path.exists(original_name_path):
+            os.remove(original_name_path)
         os.rename(tmp_path, original_name_path)
         
         client = get_or_create_rag_client(report_id)
-        client.ingest_csv(original_name_path, dataset_description=description)
+        
+        if file.filename.lower().endswith('.csv'):
+            client.ingest_csv(original_name_path, dataset_description=description)
+        else:
+            client.ingest_file(original_name_path, dataset_description=description)
         
         # Clean up the renamed file
         if os.path.exists(original_name_path):
@@ -128,6 +131,8 @@ async def upload_file(
         return {"message": f"Successfully uploaded {file.filename}"}
     except Exception as e:
         # Clean up if something failed and file still exists
+        if 'original_name_path' in locals() and os.path.exists(original_name_path):
+            os.remove(original_name_path)
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
         raise HTTPException(status_code=500, detail=str(e))
@@ -412,6 +417,48 @@ async def deep_research_query_endpoint(request: DeepResearchRequest):
         return {"response": response}
     except Exception as e:
         print(f"[DEEP RESEARCH ENDPOINT ERROR] {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+class RefineRequest(BaseModel):
+    query: str
+    model_id: str = "gemini-2.5-flash"
+    report_id: str | None = None
+
+@deep_research_router.post("/refine")
+async def deep_research_refine_endpoint(request: RefineRequest):
+    print(f"\n[REFINE ENDPOINT] Received refine request")
+    print(f"[REFINE ENDPOINT] Query: {request.query}")
+    
+    try:
+        client = get_or_create_rag_client(request.report_id)
+        refined_query = client.refine_query(
+            query=request.query,
+            model_id=request.model_id
+        )
+        return {"refined_query": refined_query}
+    except Exception as e:
+        print(f"[REFINE ENDPOINT ERROR] {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+class PlanRequest(BaseModel):
+    query: str
+    model_id: str = "gemini-2.5-flash"
+    report_id: str | None = None
+
+@deep_research_router.post("/plan")
+async def deep_research_plan_endpoint(request: PlanRequest):
+    print(f"\n[PLAN ENDPOINT] Received plan request")
+    print(f"[PLAN ENDPOINT] Query: {request.query}")
+    
+    try:
+        client = get_or_create_rag_client(request.report_id)
+        plan = client.generate_research_plan(
+            query=request.query,
+            model_id=request.model_id
+        )
+        return {"plan": plan}
+    except Exception as e:
+        print(f"[PLAN ENDPOINT ERROR] {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Include Routers

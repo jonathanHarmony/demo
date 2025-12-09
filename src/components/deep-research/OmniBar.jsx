@@ -75,16 +75,45 @@ export default function OmniBar({
     }
   };
 
+  // Typing animation helper
+  const typeText = async (text) => {
+    // Clear current text first or start replacing?
+    // Let's replace the whole text with the refined version gradually
+    onChange('');
+
+    for (let i = 0; i <= text.length; i++) {
+      onChange(text.slice(0, i));
+      // Nonlinear typing speed for realism
+      await new Promise(r => setTimeout(r, Math.random() * 10 + 10));
+    }
+  };
+
   const handleRefine = async () => {
-    if (!value.trim() || value.length < 10) return;
+    if (!value.trim() || value.length < 4) return;
     setIsRefining(true);
 
-    // Simulate AI refinement
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      const response = await fetch('http://localhost:8000/deep-research/refine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: value,
+          model_id: 'gemini-2.5-flash'
+        })
+      });
 
-    const refined = `Analyze ${value.toLowerCase().replace(/what|how|why|analyze/gi, '').trim()} in detail. Provide comprehensive insights including market trends, consumer sentiment, and competitive analysis.`;
-    onChange(refined);
-    setIsRefining(false);
+      if (!response.ok) throw new Error('Refine failed');
+
+      const data = await response.json();
+      if (data.refined_query) {
+        // Start typing animation
+        await typeText(data.refined_query);
+      }
+    } catch (err) {
+      console.error("Refine error:", err);
+    } finally {
+      setIsRefining(false);
+    }
   };
 
   return (
@@ -123,7 +152,7 @@ export default function OmniBar({
             {/* Refine Button */}
             <button
               onClick={handleRefine}
-              disabled={value.length < 10 || isRefining}
+              disabled={value.length < 4 || isRefining}
               className="flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 disabled:text-slate-400 transition-colors"
             >
               <Sparkles className={`w-3.5 h-3.5 ${isRefining ? 'animate-spin' : ''}`} />

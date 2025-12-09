@@ -19,8 +19,11 @@ class VertexRAGClient:
         self.location = location
         self.corpus_display_name = corpus_display_name
         self.corpus_name = None
-
+        
         print(f"Initializing Vertex AI in {location}...")
+        print(f"Project ID: {self.project_id}")
+        print(f"GOOGLE_APPLICATION_CREDENTIALS: {os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
+        
         vertexai.init(project=self.project_id, location=self.location)
         self._resolve_corpus()
 
@@ -100,6 +103,28 @@ class VertexRAGClient:
             # Cleanup on failure too
             if os.path.exists(processed_file_path): 
                 os.remove(processed_file_path)
+            raise e
+
+    def ingest_file(self, file_path: str, dataset_description: str = ""):
+        """Uploads a generic file (PDF, TXT, HTML, etc.) directly to RAG."""
+        if not self.corpus_name: 
+            self._resolve_corpus()
+            if not self.corpus_name:
+                raise ValueError("Corpus not initialized.")
+        
+        print(f"Ingesting File: {file_path}")
+        
+        try:
+            rag_file = rag.upload_file(
+                corpus_name=self.corpus_name,
+                path=file_path,
+                display_name=os.path.basename(file_path),
+                description=dataset_description or "Imported Document"
+            )
+            print(f"Successfully uploaded: {rag_file.name}")
+            return rag_file
+        except Exception as e:
+            print(f"Upload failed for {file_path}: {e}")
             raise e
 
     def list_files(self):
@@ -528,3 +553,128 @@ Make the data specific and relevant to the question. Return ONLY valid JSON."""
             import traceback
             traceback.print_exc()
             raise e
+
+    def refine_query(self, query: str, model_id: str = "gemini-2.5-flash"):
+        """
+        Refines a user's rough question into a professional market research question.
+        Uses Gemini to restructure clarity, scope, and professional tone.
+        """
+        print(f"\n{'='*80}")
+        print(f"[REFINE] Starting query refinement...")
+        print(f"[REFINE] Original Query: {query}")
+        
+        system_instruction = """You are a Principal Market Research Strategist.
+        Your goal is to transform user questions into comprehensive, professional Prompt Scripts for an AI Research Agent.
+
+        ## OUTPUT FORMAT
+        The output must be a single, cohesive paragraph starting with: "You are an expert market analyst..."
+        
+        It should follow this structure:
+        1.  **Persona Definition**: "You are an expert market analyst specializing in [Topic Area]..."
+        2.  **The Objective**: "Your task is to [Refined Action]..."
+        3.  **Specific Requirements**: "Please focus on [Key Metrics/Angles] and ensure the analysis covers [Specific Context]."
+
+        ## EXAMPLE
+        Input: "why are sales dropping?"
+        Output: "You are an expert market analyst specializing in retail performance and competitive dynamics. Your task is to investigate the primary drivers of recent revenue attrition, analyzing factors such as competitive pressure, market saturation, and changes in consumer purchasing behavior. Please focus on identifying specific underperforming segments and ensure the analysis covers both internal operational metrics and external market shifts."
+
+        ## RULES
+        - Output ONLY the final prompt text.
+        - Do not use markdown formatting (bolding, etc.) in the output string.
+        - Make it profesional and direct.
+        """
+
+        try:
+            model = GenerativeModel(
+                model_name=model_id,
+                system_instruction=system_instruction
+            )
+            
+            response = model.generate_content(query)
+            refined_text = response.text.strip()
+            
+            print(f"[REFINE] Refined Query: {refined_text}")
+            print(f"{'='*80}\n")
+            return refined_text
+        except Exception as e:
+            print(f"[REFINE ERROR] {e}")
+            raise e
+
+
+    def generate_research_plan(self, query: str, model_id: str = "gemini-2.5-flash"):
+        """
+        Generates a structured research plan based on the user's query.
+        Returns a JSON object with a title and a list of steps.
+        """
+        print(f"\n{'='*80}")
+        print(f"[PLAN] Generating research plan...")
+        print(f"[PLAN] Query: {query}")
+        
+        system_instruction = """You are a Senior Research Manager.
+        Your task is to create a structured research plan to answer the user's market research question.
+        
+        **CONSTRAINT:** Do strictly **NOT** include steps involving direct primary research such as surveys, polls, focus groups, or interviews. 
+        **ONLY** utilize passive and secondary data sources, including:
+        * Virtual audiences / Synthetic data
+        * Social media listening (Reddit, TikTok, X/Twitter, etc.)
+        * Review mining (Amazon, Trustpilot, App Store)
+        * Academic research papers and industry reports
+        * Blogs, forums, and news articles
+
+        OUTPUT FORMAT:
+        Return a valid JSON object with the following structure:
+        {
+            "title": "A concise, professional title for the research project",
+            "steps": [
+                "Step 1 description",
+                "Step 2 description",
+                "Step 3 description",
+                "Step 4 description"
+            ]
+        }
+        
+        GUIDELINES:
+        - The title should be professional and summarize the research goal.
+        - Create 3-5 distinct, logical steps.
+        - **CRITICAL: Each step description must be CONCISE (max 2 sentences / 2 lines of text).**
+        - Steps should cover different aspects like Market Overview, Competitor Analysis, Social Listening, , etc., as relevant to the query.
+        """
+
+        try:
+            model = GenerativeModel(
+                model_name=model_id,
+                system_instruction=system_instruction,
+                generation_config={
+                    "response_mime_type": "application/json"
+                }
+            )
+            
+            response = model.generate_content(query)
+            print(f"[PLAN] Response received. Length: {len(response.text)}")
+            
+            import json
+            # Clean and parse JSON
+            cleaned_text = response.text.strip()
+            if cleaned_text.startswith("```json"):
+                cleaned_text = cleaned_text[7:]
+            if cleaned_text.startswith("```"):
+                cleaned_text = cleaned_text[3:]
+            if cleaned_text.endswith("```"):
+                cleaned_text = cleaned_text[:-3]
+            
+            plan_data = json.loads(cleaned_text.strip())
+            print(f"[PLAN] Parsed plan: {plan_data.get('title')}")
+            print(f"{'='*80}\n")
+            return plan_data
+        except Exception as e:
+            print(f"[PLAN ERROR] {e}")
+            # Fallback plan if generation fails
+            return {
+                "title": "Research Plan",
+                "steps": [
+                    "Analyze market trends and key drivers",
+                    "Evaluate competitive landscape",
+                    "Assess consumer sentiment and preferences",
+                    "Synthesize findings and provide recommendations"
+                ]
+            }
