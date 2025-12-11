@@ -204,42 +204,66 @@ export default function DeepResearch() {
     }, 4500);
   };
 
-  const finishResearch = () => {
+  const finishResearch = async () => {
     setIsProcessing(false);
     setResearchProgress({ isActive: false, currentStep: 0, visitedSites: [] });
+
+    // Hardcoded initial display until the prompt is done
     setResearchResults({
-      title: 'Strategic Analysis: The Ascendance of Harmony AI',
-      summary: 'The global market research industry, valued at approximately $140 billion, stands at the precipice of structural dissolution. Harmony AI has emerged not merely as an iteration but as an architect of a new category: the AI First Market Research Firm.',
-      marketShare: [
-        { name: 'Harmony AI', value: 15 },
-        { name: 'Legacy Firms', value: 45 },
-        { name: 'New Entrants', value: 25 },
-        { name: 'In-House', value: 15 }
-      ],
-      growthTrend: [
-        { name: 'Q1', value: 10 },
-        { name: 'Q2', value: 25 },
-        { name: 'Q3', value: 45 },
-        { name: 'Q4', value: 80 }
-      ],
-      findings: [
-        'Harmony AI addresses the "Validation Problem" where 60% of brand decisions are based on outdated research. Traditional cycles take 4-8 weeks; Harmony compresses this to days.',
-        'The platform\'s "Synthetic User Panels" have achieved a 98% correlation with human focus groups in blind tests, effectively rendering the $40B sample recruitment market obsolete.'
-      ],
-      sections: [
-        { title: '1. The Structural Decay of Legacy Intelligence', content: 'For over a century, the mechanism for understanding consumer intent has remained static: identifying demographics, recruiting samples, and manual synthesis. This model is incompatible with the modern digital economy.' },
-        { title: '2. The "AI First" Moat', content: 'Unlike competitors layering AI on top of survey tools, Harmony generates insights from first principles using a proprietary "Behavioral Large Language Model" (B-LLM).' }
-      ]
+      title: 'מחקר שוק: אורל-בי בקרב ילדים',
+      summary: 'ממתין לתוצאות מהמנוע...',
+      marketShare: [],
+      growthTrend: [],
+      findings: [],
+      sections: []
     });
 
-    // Add assistant message after research completes
-    setTimeout(() => {
+    try {
+      // Construct the prompt for the Research Canvas content
+      const prompt = `Based on the uploaded "Oral B kids" related documents, generate a comprehensive market structure analysis in Hebrew (RTL). 
+        Structure the response as a JSON object strictly following this schema:
+        {
+          "title": "Title in Hebrew",
+          "summary": "Executive summary in Hebrew",
+          "marketShare": [ {"name": "Brand A", "value": 30}, ... ],
+          "growthTrend": [ {"name": "Q1", "value": 10}, ... ],
+          "findings": ["Finding 1 in Hebrew", "Finding 2 in Hebrew"],
+          "sections": [ {"title": "Section Title", "content": "Section content in Hebrew"} ]
+        }
+        The content should match this specific outline:
+        "דוח מחקר מקיף: ניתוח מצב בריאות השן בקרב ילדים בישראל, גורמי קונפליקט והמלצות אסטרטגיות..."
+        (Use the user provided text as a strong guide for the "sections" and "summary").
+        Ensure all text is in Hebrew.`;
+
+      const responseString = await callDeepResearchAPI(prompt);
+
+      // Simple heuristic to extract JSON if the model returns markdown code blocks
+      let cleanJson = responseString;
+      if (responseString.includes("```json")) {
+        cleanJson = responseString.split("```json")[1].split("```")[0];
+      } else if (responseString.includes("```")) {
+        cleanJson = responseString.split("```")[1].split("```")[0];
+      }
+
+      const data = JSON.parse(cleanJson);
+      setResearchResults(data);
+
+      // Add assistant message after research completes
       setConversation(prev => [...prev, {
         role: 'assistant',
-        content: "I've completed the research on Harmony AI. The analysis reveals they're pioneering a new category in market research...",
+        content: "המחקר הושלם. דוח מקיף על בריאות השן בקרב ילדים מוצג כעת.",
         timestamp: new Date().toISOString()
       }]);
-    }, 500);
+
+    } catch (e) {
+      console.error("Failed to generate research report:", e);
+      // Fallback or error state
+      setConversation(prev => [...prev, {
+        role: 'assistant',
+        content: "אירעה שגיאה ביצירת הדוח. אנא נסה שנית.",
+        timestamp: new Date().toISOString()
+      }]);
+    }
   };
 
   const handleSendMessage = async (message) => {

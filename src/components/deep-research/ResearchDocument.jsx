@@ -52,12 +52,12 @@ export default function ResearchDocument({ content, onVisualize }) {
     );
 
     return (
-        <div className="relative h-full flex flex-col bg-[#FAFAFA]">
+        <div className="relative h-full flex flex-col bg-[#FAFAFA]" dir="rtl">
             {/* Sticky Header with Studio Button */}
             <div className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
                 <div>
-                    <h2 className="text-sm font-medium text-slate-900">Research Report</h2>
-                    <p className="text-xs text-slate-500">Reading & Evidence Mode</p>
+                    <h2 className="text-sm font-medium text-slate-900 text-right">Research Report</h2>
+                    <p className="text-xs text-slate-500 text-right">Reading & Evidence Mode</p>
                 </div>
                 <button
                     onClick={onVisualize}

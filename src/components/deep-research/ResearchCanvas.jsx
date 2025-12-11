@@ -14,11 +14,11 @@ export default function ResearchCanvas({
     children,
 }) {
     return (
-        <div className="h-full overflow-y-auto bg-slate-50">
+        <div className="h-full overflow-y-auto bg-slate-50" dir="rtl">
             {isLoading ? (
                 <SkeletonLoader />
             ) : (
-                <div className="p-8">
+                <div className="p-8 text-right" dir="rtl">
                     {children}
                 </div>
             )}
