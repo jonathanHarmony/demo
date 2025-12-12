@@ -22,100 +22,181 @@ export default function NotebookView({ content, onAddBlock, onSelectBlock }) {
     // Initialize components from content
     useEffect(() => {
         if (content && reportComponents.length === 0) {
-            const initialComponents = [];
+            const initialComponents = [
+                // 1. Title & Main Headline
+                {
+                    id: 'comp_headline',
+                    title: 'Report Title',
+                    width: 'full',
+                    visualization: { type: 'headline' },
+                    result: { visualization_data: content.title || "Oral-B Disney iO Kids: Israel Launch Strategy" }
+                },
 
-            // Title
-            initialComponents.push({
-                id: 'comp_title',
-                title: 'Report Title',
-                width: 'full',
-                visualization: { type: 'headline' },
-                result: { visualization_data: content.title }
-            });
-
-            // Summary
-            if (content.executiveSummary || content.summary) {
-                initialComponents.push({
+                // 2. Executive Summary
+                {
                     id: 'comp_summary',
                     title: 'Executive Summary',
                     width: 'full',
                     visualization: { type: 'text' },
                     result: {
-                        visualization_data: { content: (content.executiveSummary?.text || content.summary) }
+                        visualization_data: {
+                            content: content.summary || "Children's oral health in Israel faces a significant challenge: approximately **50% of children suffer from caries by ages 6–8**. Analysis confirms the barrier is behavioral, not medical. The strategy proposes positioning Oral-B iO as a **family brushing platform** to gamify the routine and reduce parental conflict."
+                        }
                     }
-                });
-            }
+                },
 
-            // Market Share Chart (Mock)
-            if (content.marketShare) {
-                initialComponents.push({
-                    id: 'comp_market_share',
-                    title: 'Market Share Analysis',
+                // 3. ROW 1: Caries Prevalence (Chart Left, Text Right)
+                {
+                    id: 'comp_caries_chart',
+                    title: 'Caries Prevalence: Israel vs. Target',
+                    width: 'half',
+                    visualization: { type: 'bar' },
+                    result: {
+                        visualization_data: {
+                            items: [
+                                { name: 'Age 8 (Israel)', value: 50 },
+                                { name: 'Periphery', value: 65 },
+                                { name: 'Europe (Target)', value: 15 }
+                            ]
+                        },
+                        narrative: "Prevalence is 50% among 8-year-olds, rising to ~65% in peripheral regions."
+                    }
+                },
+                {
+                    id: 'comp_caries_text',
+                    title: 'The Challenge',
+                    width: 'half',
+                    visualization: { type: 'text' },
+                    result: {
+                        visualization_data: {
+                            content: "Data indicates a failure of home-based prevention. While Western Europe maintains a caries index below **1.0**, Israel averages **2.56** at age 6.",
+                            quote: "The gap is driven by inconsistent routines and early cessation of parental supervision."
+                        }
+                    }
+                },
+
+                // 4. ROW 2: Parental Barriers (Text Left, Chart Right)
+                {
+                    id: 'comp_parent_text',
+                    title: 'The Behavioral Barrier',
+                    width: 'half',
+                    visualization: { type: 'text' },
+                    result: {
+                        visualization_data: {
+                            content: "Parents describe brushing as a 'war' or 'nightmare.' **60% report daily conflict**, leading to emotional burnout. Crucially, **30–35% of parents surrender** and let children brush alone as early as age 3–6.",
+                            quote: "I just gave up. He screams, kicks, closes his mouth. I don't have the energy to fight every single night."
+                        }
+                    }
+                },
+                {
+                    id: 'comp_parent_chart',
+                    title: 'Parental Struggles Reported',
+                    width: 'half',
+                    visualization: { type: 'bar' },
+                    result: {
+                        visualization_data: {
+                            items: [
+                                { name: 'Daily Conflict', value: 60 },
+                                { name: 'Emotional Burnout', value: 37 },
+                                { name: 'Early Surrender', value: 33 }
+                            ]
+                        },
+                        narrative: "High conflict levels are the primary driver for ineffective brushing routines."
+                    }
+                },
+
+                // 5. ROW 3: Market Share (Chart Left, Text Right)
+                {
+                    id: 'comp_market_chart',
+                    title: 'Current Market Share',
                     width: 'half',
                     visualization: { type: 'pie' },
                     result: {
                         visualization_data: {
-                            items: content.marketShare
+                            items: content.marketShare || [
+                                { name: 'Colgate', value: 35 },
+                                { name: 'Oral-B', value: 30 },
+                                { name: 'Elmex', value: 15 },
+                                { name: 'Private Label', value: 20 }
+                            ]
                         },
-                        narrative: "Harmony AI has captured 15% of the market in just 12 months, disrupting legacy players."
+                        narrative: "Oral-B holds a strong second position with 30% market share."
                     }
-                });
-            }
+                },
+                {
+                    id: 'comp_market_text',
+                    title: 'Competitive Landscape',
+                    width: 'half',
+                    visualization: { type: 'text' },
+                    result: {
+                        visualization_data: {
+                            content: "**Colgate (35%)** leads the market, but **Oral-B (30%)** is a strong challenger. There is a clear gap for a high-efficacy domestic or innovative challenger.",
+                            quote: "The premium segment suggests an opportunity for value-added innovation to capture consumers seeking higher efficacy."
+                        }
+                    }
+                },
 
-            // Growth Chart (Mock)
-            if (content.growthTrend) {
-                initialComponents.push({
-                    id: 'comp_growth',
-                    title: 'Growth Trajectory',
+                // 6. ROW 4: Solution Validation (Text Left, Chart Right)
+                {
+                    id: 'comp_reviews_text',
+                    title: 'Validation: European Reviews',
+                    width: 'half',
+                    visualization: { type: 'text' },
+                    result: {
+                        visualization_data: {
+                            content: "Analysis of 120+ European reviews for Oral-B Disney iO confirms efficacy. **80% of parents** reported behavioral improvement. \n\nThe combination of **Disney characters, timers, and music** transforms the experience from conflict to play.",
+                            quote: "The timer changed everything. We went from crying to asking to brush."
+                        }
+                    }
+                },
+                {
+                    id: 'comp_reviews_chart',
+                    title: 'Key Drivers of Success',
+                    width: 'half',
+                    visualization: { type: 'bar' },
+                    result: {
+                        visualization_data: {
+                            items: [
+                                { name: 'Behavior Improved', value: 80 },
+                                { name: 'Timer/Music', value: 65 },
+                                { name: 'For Sensitive', value: 35 }
+                            ]
+                        },
+                        narrative: "Gamification elements (timers, music) are the #1 driver of compliance."
+                    }
+                },
+
+                // 7. ROW 5: Growth & Strategy (Chart Left, Text Right)
+                {
+                    id: 'comp_growth_chart',
+                    title: 'Projected Market Penetration',
                     width: 'half',
                     visualization: { type: 'line' },
                     result: {
                         visualization_data: {
-                            items: content.growthTrend
+                            items: content.growthTrend || [
+                                { name: '2022', value: 64 },
+                                { name: '2023', value: 68 },
+                                { name: '2024', value: 73 },
+                                { name: '2025', value: 75 }
+                            ]
                         },
-                        narrative: "Projected growth indicates a 300% increase in user adoption by Q4 2025."
+                        narrative: "Steady growth projected as the family-based strategy gains traction."
                     }
-                });
-            }
-
-            // Findings
-            if (content.findings) {
-                content.findings.forEach((finding, idx) => {
-                    initialComponents.push({
-                        id: `comp_finding_${idx}`,
-                        title: `Key Finding ${idx + 1}`,
-                        width: 'half',
-                        visualization: { type: 'text' },
-                        result: {
-                            visualization_data: {
-                                content: finding.segments?.map(s => {
-                                    if (s.citation) {
-                                        return `${s.text} [${s.citation.number}]`;
-                                    }
-                                    return s.text;
-                                }).join('') || finding
-                            }
+                },
+                {
+                    id: 'comp_strategy_text',
+                    title: 'Strategic Recommendation',
+                    width: 'half',
+                    visualization: { type: 'text' },
+                    result: {
+                        visualization_data: {
+                            content: "### The Family iO Ecosystem\n\nShift from selling a 'child's toothbrush' to selling a **family ritual**. \n\n1. **Game Structure**: Points accumulate for the whole family.\n2. **Modeling**: Parents use their iO brush alongside the child.",
+                            quote: "Children resist orders but respond to systems. A game creates a neutral system that removes the parent as the antagonist."
                         }
-                    });
-                });
-            }
-
-            // Sections
-            if (content.sections) {
-                content.sections.forEach((section, idx) => {
-                    initialComponents.push({
-                        id: `comp_section_${idx}`,
-                        title: section.title,
-                        width: 'half',
-                        visualization: { type: 'text' },
-                        result: {
-                            visualization_data: {
-                                content: section.content
-                            }
-                        }
-                    });
-                });
-            }
+                    }
+                }
+            ];
 
             setReportComponents(initialComponents);
         }

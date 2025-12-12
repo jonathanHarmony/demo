@@ -23,7 +23,7 @@ export default function ComponentRenderer({ component }) {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
                 <Bar dataKey="value" fill="#0F1C2E" radius={[4, 4, 0, 0]} />
@@ -39,7 +39,7 @@ export default function ComponentRenderer({ component }) {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
                 <Line type="monotone" dataKey="value" stroke="#3CC4C7" strokeWidth={3} dot={{ r: 4 }} />
@@ -86,9 +86,52 @@ export default function ComponentRenderer({ component }) {
           </div>
         );
       case 'text':
+        const quote = result.visualization_data?.quote;
         return (
-          <div className="prose prose-sm max-w-none text-slate-600">
-            <p>{content}</p>
+          <div className="flex flex-col h-full">
+            <div className="prose prose-sm max-w-none text-slate-600 leading-relaxed">
+              {content.split('\n').map((line, i) => {
+                if (!line.trim()) return <div key={i} className="h-3" />;
+
+                // Handle bullet points
+                if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
+                  return (
+                    <div key={i} className="flex gap-2 mb-1 ml-2">
+                      <span className="text-slate-400">•</span>
+                      <span>
+                        {line.replace(/^[•-]\s*/, '').split(/(\*\*.*?\*\*)/g).map((part, j) => {
+                          if (part.startsWith('**') && part.endsWith('**')) {
+                            return <strong key={j} className="font-semibold text-slate-900">{part.slice(2, -2)}</strong>;
+                          }
+                          return part;
+                        })}
+                      </span>
+                    </div>
+                  );
+                }
+
+                return (
+                  <p key={i} className="mb-3 last:mb-0">
+                    {line.split(/(\*\*.*?\*\*)/g).map((part, j) => {
+                      if (part.startsWith('**') && part.endsWith('**')) {
+                        return <strong key={j} className="font-semibold text-slate-900">{part.slice(2, -2)}</strong>;
+                      }
+                      return part;
+                    })}
+                  </p>
+                );
+              })}
+            </div>
+
+            {quote && (
+              <div className="mt-auto pt-6">
+                <div className="relative pl-5 border-l-2 border-teal-500/30">
+                  <p className="text-sm font-medium italic text-slate-700 leading-relaxed">
+                    "{quote}"
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         );
       default:
@@ -103,7 +146,7 @@ export default function ComponentRenderer({ component }) {
           <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
         </div>
       )}
-      
+
       <div className="flex-1 min-h-0">
         {renderVisualization()}
       </div>
