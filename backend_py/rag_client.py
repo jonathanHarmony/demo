@@ -554,6 +554,88 @@ Make the data specific and relevant to the question. Return ONLY valid JSON."""
             traceback.print_exc()
             raise e
 
+    def report_qa(self, query: str, report_content: str, model_id: str = "gemini-2.5-flash", history: List[dict] = None):
+        """
+        Answers questions about a specific report using the report content as context + RAG.
+        """
+        print(f"\n{'='*80}")
+        print(f"[REPORT Q&A] Starting query...")
+        print(f"[REPORT Q&A] Model: {model_id}")
+        print(f"[REPORT Q&A] Query: {query[:100]}...")
+        print(f"[REPORT Q&A] Report context length: {len(report_content)} chars")
+        
+        # Initialize RAG tool for additional context
+        tools = []
+        if self.corpus_name:
+            print(f"[REPORT Q&A] Adding RAG tool with corpus: {self.corpus_name}")
+            try:
+                rag_tool = Tool.from_retrieval(
+                    retrieval=rag.Retrieval(
+                        source=rag.VertexRagStore(
+                            rag_resources=[rag.RagResource(rag_corpus=self.corpus_name)],
+                            similarity_top_k=3,  # Reduced to not overwhelm the report context
+                            vector_distance_threshold=0.6  # Higher threshold = more relevant only
+                        )
+                    )
+                )
+                tools.append(rag_tool)
+            except Exception as e:
+                print(f"[REPORT Q&A WARNING] Failed to create RAG tool: {e}")
+        
+        system_instruction = """You are a Research Report Assistant helping users understand and explore a market research report.
+
+## YOUR ROLE:
+1. Answer questions based PRIMARILY on the REPORT CONTEXT provided in the user message.
+2. The report content is your PRIMARY source of truth.
+3. RAG data (if available) is a SECONDARY source for additional supporting evidence only.
+4. Be conversational and helpful.
+5. Quote specific parts of the report when relevant.
+6. If asked about something not in the report, clearly state that and provide general knowledge if helpful.
+
+## GUIDELINES:
+- Keep responses focused and concise (2-4 paragraphs typically)
+- Use bullet points for lists
+- PRIORITIZE the report content over all other sources
+- If the user asks to modify or add to the report, explain what changes would be needed
+- Always maintain a professional, helpful tone
+"""
+
+        # Construct the actual query with report context included
+        augmented_query = f"""Based on the following REPORT CONTEXT, please answer the user's question.
+
+### REPORT CONTEXT (PRIMARY SOURCE - USE THIS FIRST):
+{report_content}
+
+### USER QUESTION:
+{query}
+
+Please answer the question above primarily based on the REPORT CONTEXT. If the information is in the report, cite it directly. Only use external sources if the report doesn't cover the topic."""
+
+        try:
+            model = GenerativeModel(
+                model_name=model_id,
+                tools=tools if tools else None,
+                system_instruction=system_instruction
+            )
+            
+            chat_history = []
+            if history:
+                for msg in history:
+                    role = "model" if msg.role == "assistant" else "user"
+                    chat_history.append(Content(role=role, parts=[Part.from_text(msg.content)]))
+
+            chat = model.start_chat(history=chat_history)
+            response = chat.send_message(augmented_query)
+            
+            print(f"[REPORT Q&A] Response generated. Length: {len(response.text)}")
+            return response.text
+
+        except Exception as e:
+            print(f"[REPORT Q&A ERROR] {e}")
+            import traceback
+            traceback.print_exc()
+            raise e
+
     def refine_query(self, query: str, model_id: str = "gemini-2.5-flash"):
         """
         Refines a user's rough question into a professional market research question.

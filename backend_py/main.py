@@ -419,6 +419,31 @@ async def deep_research_query_endpoint(request: DeepResearchRequest):
         print(f"[DEEP RESEARCH ENDPOINT ERROR] {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+class ReportQARequest(BaseModel):
+    query: str
+    report_content: str
+    model_id: str = "gemini-2.5-flash"
+    history: List[Message] = []
+    report_id: str | None = None
+
+@deep_research_router.post("/report-qa")
+async def report_qa_endpoint(request: ReportQARequest):
+    print(f"\n[REPORT Q&A ENDPOINT] Received query")
+    print(f"[REPORT Q&A ENDPOINT] Query: {request.query}")
+    
+    try:
+        client = get_or_create_rag_client(request.report_id)
+        response = client.report_qa(
+            query=request.query,
+            report_content=request.report_content,
+            model_id=request.model_id,
+            history=request.history
+        )
+        return {"response": response}
+    except Exception as e:
+        print(f"[REPORT Q&A ENDPOINT ERROR] {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 class RefineRequest(BaseModel):
     query: str
     model_id: str = "gemini-2.5-flash"

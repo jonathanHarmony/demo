@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 import {
     Popover,
     PopoverContent,
@@ -52,12 +54,12 @@ export default function ResearchDocument({ content, onVisualize }) {
     );
 
     return (
-        <div className="relative h-full flex flex-col bg-[#FAFAFA]" dir="rtl">
+        <div className="relative h-full flex flex-col bg-[#FAFAFA]">
             {/* Sticky Header with Studio Button */}
             <div className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
                 <div>
-                    <h2 className="text-sm font-medium text-slate-900 text-right">Research Report</h2>
-                    <p className="text-xs text-slate-500 text-right">Reading & Evidence Mode</p>
+                    <h2 className="text-sm font-medium text-slate-900">Research Report</h2>
+                    <p className="text-xs text-slate-500">Reading & Evidence Mode</p>
                 </div>
                 <button
                     onClick={onVisualize}
@@ -77,84 +79,96 @@ export default function ResearchDocument({ content, onVisualize }) {
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="text-lg text-slate-600 mb-8 font-normal">
-                        {content.subtitle}
-                    </p>
+                    {content.subtitle && (
+                        <p className="text-lg text-slate-600 mb-8 font-normal">
+                            {content.subtitle}
+                        </p>
+                    )}
 
                     {/* Main Content - Continuous Prose */}
                     <div className="space-y-6 text-slate-800 leading-relaxed">
-                        {/* Executive Summary Section */}
-                        <section>
-                            <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                Executive Summary
-                            </h2>
-                            <p className="text-base leading-relaxed">
-                                {content.executiveSummary.text}
-                                {content.executiveSummary.citations?.map((citation, i) => (
-                                    <Citation key={i} number={citation.number} source={citation.source} />
-                                ))}
-                            </p>
-                        </section>
+
+                        {/* Summary */}
+                        {(content.summary || content.executiveSummary) && (
+                            <section>
+                                <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                    Executive Summary
+                                </h2>
+                                <div className="text-base leading-relaxed">
+                                    <ReactMarkdown remarkPlugins={[remarkBreaks]}>
+                                        {typeof content.summary === 'string' ? content.summary : content.executiveSummary?.text}
+                                    </ReactMarkdown>
+                                </div>
+                            </section>
+                        )}
 
                         {/* Findings Section */}
-                        <section>
-                            <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                Key Findings
-                            </h2>
+                        {content.findings && content.findings.length > 0 && (
+                            <section>
+                                <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                    Key Findings
+                                </h2>
+                                {content.findings.map((finding, index) => (
+                                    <div key={index} className="text-base leading-relaxed mb-4">
+                                        <ReactMarkdown remarkPlugins={[remarkBreaks]}>
+                                            {typeof finding === 'string' ? finding : finding.segments.map(s => s.text).join('')}
+                                        </ReactMarkdown>
+                                    </div>
+                                ))}
+                            </section>
+                        )}
 
-                            {content.findings.map((finding, index) => (
-                                <p key={index} className="text-base leading-relaxed mb-4">
-                                    {finding.segments.map((segment, segIndex) => (
-                                        <React.Fragment key={segIndex}>
-                                            {segment.text}
-                                            {segment.citation && (
-                                                <Citation number={segment.citation.number} source={segment.citation.source} />
-                                            )}
-                                        </React.Fragment>
-                                    ))}
-                                </p>
-                            ))}
-                        </section>
+                        {/* Dynamic Sections */}
+                        {content.sections && content.sections.map((section, index) => (
+                            <section key={index}>
+                                <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                    {section.title}
+                                </h2>
+                                <div className="text-base leading-relaxed markdown-content">
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkBreaks]}
+                                        components={{
+                                            h3: ({ node, ...props }) => <h3 className="text-xl font-medium mt-6 mb-2 text-slate-900" {...props} />,
+                                            ul: ({ node, ...props }) => <ul className="list-disc pl-5 space-y-2 mb-4" {...props} />,
+                                            li: ({ node, ...props }) => <li className="text-slate-800" {...props} />,
+                                            p: ({ node, ...props }) => <p className="mb-4 text-slate-800" {...props} />,
+                                            strong: ({ node, ...props }) => <strong className="font-semibold text-slate-900" {...props} />
+                                        }}
+                                    >
+                                        {section.content}
+                                    </ReactMarkdown>
+                                </div>
+                            </section>
+                        ))}
 
-                        {/* Analysis Section */}
-                        <section>
-                            <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                Detailed Analysis
-                            </h2>
+                        {/* Legacy Analysis Section (fallback) */}
+                        {content.analysis && !content.sections && (
+                            <section>
+                                <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                    Detailed Analysis
+                                </h2>
+                                {content.analysis.map((paragraph, index) => (
+                                    <p key={index} className="text-base leading-relaxed mb-4">
+                                        {paragraph.segments.map(s => s.text).join('')}
+                                    </p>
+                                ))}
+                            </section>
+                        )}
 
-                            {content.analysis?.map((paragraph, index) => (
-                                <p key={index} className="text-base leading-relaxed mb-4">
-                                    {paragraph.segments.map((segment, segIndex) => (
-                                        <React.Fragment key={segIndex}>
-                                            {segment.text}
-                                            {segment.citation && (
-                                                <Citation number={segment.citation.number} source={segment.citation.source} />
-                                            )}
-                                        </React.Fragment>
-                                    ))}
-                                </p>
-                            ))}
-                        </section>
+                        {/* Legacy Recommendations Section (fallback) */}
+                        {content.recommendations && !content.sections && (
+                            <section>
+                                <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                    Strategic Recommendations
+                                </h2>
+                                {content.recommendations.map((paragraph, index) => (
+                                    <p key={index} className="text-base leading-relaxed mb-4">
+                                        {paragraph.segments.map(s => s.text).join('')}
+                                    </p>
+                                ))}
+                            </section>
+                        )}
 
-                        {/* Recommendations */}
-                        <section>
-                            <h2 className="text-2xl font-serif text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                Strategic Recommendations
-                            </h2>
-
-                            {content.recommendations?.map((rec, index) => (
-                                <p key={index} className="text-base leading-relaxed mb-4">
-                                    {rec.segments.map((segment, segIndex) => (
-                                        <React.Fragment key={segIndex}>
-                                            {segment.text}
-                                            {segment.citation && (
-                                                <Citation number={segment.citation.number} source={segment.citation.source} />
-                                            )}
-                                        </React.Fragment>
-                                    ))}
-                                </p>
-                            ))}
-                        </section>
                     </div>
                 </article>
             </div>

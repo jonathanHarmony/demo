@@ -86,6 +86,7 @@ function PagesContent() {
                 <Route path="/QuickBriefWorkspace" element={<QuickBriefWorkspacePage />} />
 
                 <Route path="/DeepResearch" element={<DeepResearch />} />
+                <Route path="/deep-research/finished" element={<DeepResearch isFinished={true} />} />
 
 
             </Routes>

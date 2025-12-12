@@ -19,57 +19,100 @@ export default function ResearchEditor({
     const generateHTML = (data) => {
         if (!data) return '';
 
-        let html = `<h1>${data.title}</h1>`;
-        if (data.subtitle) html += `<h3>${data.subtitle}</h3>`;
-
-        // Helper to process segments with citations
-        const processSegments = (segments) => {
-            if (!segments) return '';
-            return segments.map(segment => {
-                let text = segment.text;
-                if (segment.citation) {
-                    // Create citation node
-                    text += `<citation number="${segment.citation.number}" source='${JSON.stringify(segment.citation.source)}'></citation>`;
-                }
-                return text;
-            }).join('');
+        // Helper to convert markdown to HTML
+        const markdownToHtml = (text) => {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
         };
 
-        if (data.executiveSummary) {
-            html += `<h2>Executive Summary</h2>`;
-            let text = data.executiveSummary.text || '';
-            if (data.executiveSummary.citations) {
-                data.executiveSummary.citations.forEach(cit => {
-                    text += `<citation number="${cit.number}" source='${JSON.stringify(cit.source)}'></citation>`;
-                });
-            }
-            html += `<p>${text}</p>`;
+        // Helper to convert text with paragraphs
+        const textToParagraphs = (text) => {
+            const paragraphs = text.split(/\n\n+/);
+            return paragraphs
+                .map(p => `<p style="line-height: 1.8; color: #1a1a1a; margin-bottom: 1rem;">${markdownToHtml(p.trim())}</p>`)
+                .join('');
+        };
+
+        // Main title
+        let html = `<h1 style="font-size: 1.875rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">${data.title}</h1>`;
+
+        // Subtitle if present
+        if (data.subtitle) {
+            html += `<p style="font-size: 1rem; color: #6b7280; margin-bottom: 2.5rem; line-height: 1.6;">${data.subtitle}</p>`;
         }
 
-        const sections = [
-            { key: 'findings', title: 'Key Findings' },
-            { key: 'analysis', title: 'Detailed Analysis' },
-            { key: 'recommendations', title: 'Strategic Recommendations' }
-        ];
+        // Executive Summary
+        if (data.summary) {
+            html += `<h2 style="font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-top: 2.5rem; margin-bottom: 1rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">Executive Summary</h2>`;
+            html += textToParagraphs(data.summary);
+        } else if (data.executiveSummary) {
+            html += `<h2 style="font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-top: 2.5rem; margin-bottom: 1rem;">Executive Summary</h2>`;
+            html += `<p style="line-height: 1.8; color: #1a1a1a; margin-bottom: 1rem;">${data.executiveSummary.text || ''}</p>`;
+        }
 
-        sections.forEach(section => {
-            if (data[section.key]) {
-                html += `<h2>${section.title}`;
-                if (data[section.key].citations) {
-                    data[section.key].citations.forEach(cit => {
-                        html += `<citation number="${cit.number}" source='${JSON.stringify(cit.source)}'></citation>`;
-                    });
-                }
-                html += `</h2>`;
-                data[section.key].forEach(item => {
-                    if (item.segments) {
-                        html += `<p>${processSegments(item.segments)}</p>`;
-                    } else if (typeof item === 'string') {
-                        html += `<p>${item}</p>`;
+        // Handle sections array
+        if (data.sections && data.sections.length > 0) {
+            data.sections.forEach(section => {
+                // Section title
+                html += `<h2 style="font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-top: 2.5rem; margin-bottom: 1rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">${section.title}</h2>`;
+
+                // Process section content
+                let content = section.content;
+
+                // Split by double newlines for paragraphs
+                const blocks = content.split(/\n\n+/);
+
+                blocks.forEach(block => {
+                    block = block.trim();
+                    if (!block) return;
+
+                    // Check if it's a ### header
+                    if (block.startsWith('### ')) {
+                        const headerText = block.substring(4);
+                        html += `<h3 style="font-size: 1.125rem; font-weight: 600; color: #1a1a1a; margin-top: 1.5rem; margin-bottom: 0.75rem;">${markdownToHtml(headerText)}</h3>`;
+                    }
+                    // Check if it's a list (starts with - or •)
+                    else if (block.match(/^[-•]/m)) {
+                        const items = block.split(/\n/).filter(line => line.trim());
+                        html += '<ul style="margin: 0.5rem 0 1rem 0; padding-left: 0;">';
+                        items.forEach(item => {
+                            // Clean the bullet point
+                            const cleanItem = item.replace(/^[-•]\s*/, '').trim();
+                            if (cleanItem) {
+                                html += `<li style="line-height: 1.8; color: #1a1a1a; margin-bottom: 0.5rem; margin-left: 1.5rem;">${markdownToHtml(cleanItem)}</li>`;
+                            }
+                        });
+                        html += '</ul>';
+                    }
+                    // Regular paragraph
+                    else {
+                        // Handle single-line text that might have ### headers mixed in
+                        const lines = block.split(/\n/);
+                        lines.forEach(line => {
+                            line = line.trim();
+                            if (!line) return;
+
+                            if (line.startsWith('### ')) {
+                                const headerText = line.substring(4);
+                                html += `<h3 style="font-size: 1.125rem; font-weight: 600; color: #1a1a1a; margin-top: 1.5rem; margin-bottom: 0.75rem;">${markdownToHtml(headerText)}</h3>`;
+                            } else {
+                                html += `<p style="line-height: 1.8; color: #1a1a1a; margin-bottom: 1rem;">${markdownToHtml(line)}</p>`;
+                            }
+                        });
                     }
                 });
-            }
-        });
+            });
+        }
+
+        // Handle findings if present and not empty
+        if (data.findings && data.findings.length > 0) {
+            html += `<h2 style="font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-top: 2.5rem; margin-bottom: 1rem;">Key Findings</h2>`;
+            data.findings.forEach(finding => {
+                const text = typeof finding === 'string' ? finding : (finding.segments?.map(s => s.text).join('') || '');
+                html += `<p style="line-height: 1.8; color: #1a1a1a; margin-bottom: 1rem;">${markdownToHtml(text)}</p>`;
+            });
+        }
 
         return html;
     };
