@@ -1,48 +1,115 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import { Mark, mergeAttributes } from '@tiptap/core';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, FileText } from 'lucide-react';
 
-// Custom Citation Mark extension
-const Citation = Mark.create({
-    name: 'citation',
-
+// Custom Citation Mark Extension
+const CitationSpan = Mark.create({
+    name: 'citationSpan',
     addAttributes() {
         return {
             source: {
                 default: null,
+                parseHTML: element => element.getAttribute('data-source'),
+                renderHTML: attributes => {
+                    return {
+                        'data-source': attributes.source,
+                    }
+                },
             },
-        };
+        }
     },
-
     parseHTML() {
         return [
             {
-                tag: 'span[data-citation]',
+                tag: 'span.citation-text',
             },
-        ];
+        ]
     },
-
     renderHTML({ HTMLAttributes }) {
-        return [
-            'span',
-            mergeAttributes(HTMLAttributes, {
-                'data-citation': '',
-                'class': 'citation-icon',
-                'title': HTMLAttributes.source,
-            }),
-            '¹',
-        ];
+        return ['span', mergeAttributes(HTMLAttributes, { class: 'citation-text' }), 0]
     },
 });
+
+// Mock sources for citations
+const CITATION_SOURCES = [
+    'Israel Ministry of Health – Oral Health Surveys',
+    'WHO Oral Health Database',
+    'OECD Health at a Glance',
+    'Central Bureau of Statistics – Child Health Data',
+    'Social Graph Facebook Analysis',
+    'Amazon Customer Reviews',
+    'Boots Customer Reviews',
+];
+
+// Citation Tooltip Component
+const CitationTooltip = ({ x, y, source, visible }) => {
+    if (!visible) return null;
+
+    return (
+        <div
+            className="fixed z-[9999] bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm text-gray-700 pointer-events-none"
+            style={{
+                left: x,
+                top: y - 40,
+                transform: 'translateX(-50%)',
+            }}
+        >
+            <div className="flex items-center gap-2">
+                <FileText className="w-3.5 h-3.5 text-gray-400" />
+                <span>{source}</span>
+            </div>
+        </div>
+    );
+};
 
 /**
  * NotionDocument - Notion-style WYSIWYG editor using Tiptap
  * Provides true inline editing experience
  */
 export default function NotionDocument({ content, onOpenStudio, onContentChange }) {
+    const editorContainerRef = useRef(null);
+    const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, source: '' });
+
+    // Handle hover events for tooltips
+    const handleMouseOver = useCallback((e) => {
+        const target = e.target.closest('.citation-text');
+        if (target) {
+            const rect = target.getBoundingClientRect();
+            const source = target.getAttribute('data-source');
+            setTooltip({
+                visible: true,
+                x: rect.left + rect.width / 2,
+                y: rect.top,
+                source: source
+            });
+        }
+    }, []);
+
+    const handleMouseOut = useCallback(() => {
+        setTooltip(prev => ({ ...prev, visible: false }));
+    }, []);
+
+    // Format text with citations
+    const addCitations = (text) => {
+        let result = text;
+
+        // Percentages
+        result = result.replace(/(\d+(?:\.\d+)?%)/g, (match) => {
+            const source = CITATION_SOURCES[Math.floor(Math.random() * CITATION_SOURCES.length)];
+            return `<span class="citation-text" data-source="${source}">${match}</span>`;
+        });
+
+        // Age references
+        result = result.replace(/(age[s]?\s+\d+(?:[–-]\d+)?)/gi, (match) => {
+            const source = CITATION_SOURCES[Math.floor(Math.random() * CITATION_SOURCES.length)];
+            return `<span class="citation-text" data-source="${source}">${match}</span>`;
+        });
+
+        return result;
+    };
 
     // Convert structured content to HTML for Tiptap
     const contentToHTML = useCallback((data) => {
@@ -66,6 +133,7 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
             paragraphs.forEach(p => {
                 let formatted = p.trim()
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                formatted = addCitations(formatted);
                 if (formatted) {
                     html += `<p>${formatted}</p>`;
                 }
@@ -106,6 +174,7 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
                     flushList();
                     let headerText = trimmedLine.substring(4)
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    headerText = addCitations(headerText);
                     result += `<h3>${headerText}</h3>`;
                 }
                 // Check if it's a bullet point (• or -)
@@ -113,6 +182,7 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
                     inList = true;
                     let itemText = trimmedLine.replace(/^[•\-]\s*/, '')
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    itemText = addCitations(itemText);
                     listItems.push(itemText);
                 }
                 // Regular text line
@@ -120,6 +190,7 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
                     flushList();
                     let formatted = trimmedLine
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    formatted = addCitations(formatted);
                     result += `<p>${formatted}</p>`;
                 }
             });
@@ -154,7 +225,7 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
             Placeholder.configure({
                 placeholder: 'Start writing...',
             }),
-            Citation,
+            CitationSpan,
         ],
         content: contentToHTML(content),
         editorProps: {
@@ -183,7 +254,14 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
     }
 
     return (
-        <div className="h-full bg-[#f8f9fa] flex flex-col">
+        <div
+            className="h-full bg-[#f8f9fa] flex flex-col relative"
+            ref={editorContainerRef}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+        >
+            <CitationTooltip {...tooltip} />
+
             {/* Header */}
             <div className="sticky top-0 z-10 bg-[#f8f9fa] border-b border-gray-200 px-8 py-4 flex items-center justify-between">
                 <div>
@@ -205,6 +283,7 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
                     <style>{`
                         .notion-editor {
                             font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+                            counter-reset: citation;
                         }
                         .notion-editor h1 {
                             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -223,6 +302,31 @@ export default function NotionDocument({ content, onOpenStudio, onContentChange 
                             margin-top: 2rem;
                             margin-bottom: 0.75rem;
                             line-height: 1.3;
+                        }
+                        .notion-editor .citation-text {
+                            text-decoration: underline;
+                            text-decoration-style: dotted;
+                            text-decoration-color: #9ca3af;
+                            text-underline-offset: 4px;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                        }
+                        .notion-editor .citation-text:hover {
+                            color: #2563eb;
+                            text-decoration-color: #2563eb;
+                            background-color: rgba(37, 99, 235, 0.05); 
+                            border-radius: 4px;
+                        }
+                        .notion-editor .citation-text::after {
+                            counter-increment: citation;
+                            content: "[" counter(citation) "]";
+                            font-size: 0.65em;
+                            vertical-align: super;
+                            margin-left: 1px;
+                            color: #6b7280;
+                            display: inline-block;
+                            text-decoration: none;
+                            line-height: 1;
                         }
                         .notion-editor h2.first-section {
                             margin-top: 1.5rem;
