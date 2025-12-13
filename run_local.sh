@@ -61,7 +61,6 @@ pip install -r requirements.txt
 echo -e "\n${GREEN}🚀 Starting Backend Server on port 8000...${NC}"
 cd .. # Go back to root
 export PYTHONPATH=$(pwd)
-unset GOOGLE_APPLICATION_CREDENTIALS
 uvicorn backend_py.main:app --host 0.0.0.0 --port 8000 --reload &
 BACKEND_PID=$!
 
