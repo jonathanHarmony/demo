@@ -165,13 +165,7 @@ function LayoutContent({ children, currentPageName }) {
                 to="/report2"
                 className={`w-full px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 rounded transition-colors line-clamp-1 block ${isRTL ? 'text-right' : 'text-left'}`}
               >
-                שביעות רצון cowfree
-              </Link>
-              <Link
-                to="/report3"
-                className={`w-full px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 rounded transition-colors line-clamp-1 block ${isRTL ? 'text-right' : 'text-left'}`}
-              >
-                Cowfree Satisfaction (EN)
+                שביעות רצון חלב ללא חלב
               </Link>
             </div>
           </div>

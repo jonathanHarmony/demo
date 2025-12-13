@@ -48,51 +48,79 @@ export default function NotebookView({ content, onAddBlock, onSelectBlock }) {
                 // 3. ROW 1: Caries Prevalence (Chart Left, Text Right)
                 {
                     id: 'comp_caries_chart',
-                    title: 'Caries Prevalence: Israel vs. Target',
+                    title: 'Caries Prevalence in Israel',
                     width: 'half',
                     visualization: { type: 'bar' },
                     result: {
                         visualization_data: {
                             items: [
                                 { name: 'Age 8 (Israel)', value: 50 },
-                                { name: 'Periphery', value: 65 },
-                                { name: 'Europe (Target)', value: 15 }
+                                { name: 'Periphery', value: 65 }
                             ]
                         },
-                        narrative: "Prevalence is 50% among 8-year-olds, rising to ~65% in peripheral regions."
+                        narrative: "50% of children under 8 suffer from caries, rising to ~65% in peripheral regions."
                     }
                 },
                 {
                     id: 'comp_caries_text',
-                    title: 'The Challenge',
+                    title: 'The Scale of the Crisis',
                     width: 'half',
                     visualization: { type: 'text' },
                     result: {
                         visualization_data: {
-                            content: "Data indicates a failure of home-based prevention. While Western Europe maintains a caries index below **1.0**, Israel averages **2.56** at age 6.",
-                            quote: "The gap is driven by inconsistent routines and early cessation of parental supervision."
+                            content: "The Ministry of Health data is alarming: **50% of children** have caries by age 8. In peripheral regions, untreated caries reach **61%–69%**. This indicates a widespread failure of home-based prevention.",
+                            quote: "These data indicate a failure of home-based prevention, rather than lack of treatment access."
                         }
                     }
                 },
 
-                // 4. ROW 2: Parental Barriers (Text Left, Chart Right)
+                // 4. ROW 2: The Supervision Gap (Chart Left, Text Right) -> REPLACES MARKET SHARE
                 {
-                    id: 'comp_parent_text',
-                    title: 'The Behavioral Barrier',
+                    id: 'comp_gap_chart',
+                    title: 'The Supervision Gap (Years)',
+                    width: 'half',
+                    visualization: { type: 'bar' },
+                    result: {
+                        visualization_data: {
+                            items: [
+                                { name: 'Recommended Age', value: 8 },
+                                { name: 'Actual Stop Age', value: 4.5 }
+                            ]
+                        },
+                        narrative: "Parents stop supervising 3.5 years too early due to conflict."
+                    }
+                },
+                {
+                    id: 'comp_gap_text',
+                    title: 'Why Prevention Fails',
                     width: 'half',
                     visualization: { type: 'text' },
                     result: {
                         visualization_data: {
-                            content: "Parents describe brushing as a 'war' or 'nightmare.' **60% report daily conflict**, leading to emotional burnout. Crucially, **30–35% of parents surrender** and let children brush alone as early as age 3–6.",
+                            content: "Dentists emphasize that **supervision is required until age 8**. However, data shows that **30–35% of parents surrender** and let children brush alone as early as ages 3–6. The primary driver is daily conflict.",
+                            quote: "Parental supervision is required until age 8. Parents seek treatment only when pain appears."
+                        }
+                    }
+                },
+
+                // 5. ROW 3: Parental Barriers (Text Left, Chart Right)
+                {
+                    id: 'comp_parent_text',
+                    title: 'The Daily Battle',
+                    width: 'half',
+                    visualization: { type: 'text' },
+                    result: {
+                        visualization_data: {
+                            content: "**60% of parents** report daily conflict around brushing. This leads to emotional burnout (**37%**) and eventually, the early surrender of supervision depicted above.",
                             quote: "I just gave up. He screams, kicks, closes his mouth. I don't have the energy to fight every single night."
                         }
                     }
                 },
                 {
                     id: 'comp_parent_chart',
-                    title: 'Parental Struggles Reported',
+                    title: 'Parental Pain Points',
                     width: 'half',
-                    visualization: { type: 'bar' },
+                    visualization: { type: 'horizontal_bar' },
                     result: {
                         visualization_data: {
                             items: [
@@ -101,42 +129,40 @@ export default function NotebookView({ content, onAddBlock, onSelectBlock }) {
                                 { name: 'Early Surrender', value: 33 }
                             ]
                         },
-                        narrative: "High conflict levels are the primary driver for ineffective brushing routines."
+                        narrative: "Conflict leads to burnout, which leads to early surrender."
                     }
                 },
 
-                // 5. ROW 3: Market Share (Chart Left, Text Right)
+                // 6. ROW 4: Caries Index Comparison (Chart Left, Text Right) -> REPLACES GROWTH
                 {
-                    id: 'comp_market_chart',
-                    title: 'Current Market Share',
+                    id: 'comp_index_chart',
+                    title: 'DMFT Index (Age 6)',
                     width: 'half',
-                    visualization: { type: 'pie' },
+                    visualization: { type: 'bar' },
                     result: {
                         visualization_data: {
-                            items: content.marketShare || [
-                                { name: 'Colgate', value: 35 },
-                                { name: 'Oral-B', value: 30 },
-                                { name: 'Elmex', value: 15 },
-                                { name: 'Private Label', value: 20 }
+                            items: [
+                                { name: 'Israel', value: 2.56 },
+                                { name: 'W. Europe', value: 0.9 }
                             ]
                         },
-                        narrative: "Oral-B holds a strong second position with 30% market share."
+                        narrative: "Israel's decay index is 2.5x higher than Western European standards."
                     }
                 },
                 {
-                    id: 'comp_market_text',
-                    title: 'Competitive Landscape',
+                    id: 'comp_index_text',
+                    title: 'International Benchmarks',
                     width: 'half',
                     visualization: { type: 'text' },
                     result: {
                         visualization_data: {
-                            content: "**Colgate (35%)** leads the market, but **Oral-B (30%)** is a strong challenger. There is a clear gap for a high-efficacy domestic or innovative challenger.",
-                            quote: "The premium segment suggests an opportunity for value-added innovation to capture consumers seeking higher efficacy."
+                            content: "The Caries Index (Decayed/Missing/Filled teeth) exposes the severity. Israel averages **2.56** at age 6, while Western European countries like Denmark and Sweden are below **1.0**.",
+                            quote: "This gap reflects a behavioral issue, not a purely educational one."
                         }
                     }
                 },
 
-                // 6. ROW 4: Solution Validation (Text Left, Chart Right)
+                // 7. ROW 5: Solution Validation (Text Left, Chart Right)
                 {
                     id: 'comp_reviews_text',
                     title: 'Validation: European Reviews',
@@ -144,16 +170,16 @@ export default function NotebookView({ content, onAddBlock, onSelectBlock }) {
                     visualization: { type: 'text' },
                     result: {
                         visualization_data: {
-                            content: "Analysis of 120+ European reviews for Oral-B Disney iO confirms efficacy. **80% of parents** reported behavioral improvement. \n\nThe combination of **Disney characters, timers, and music** transforms the experience from conflict to play.",
+                            content: "Analysis of 120+ European reviews confirms that the Oral-B Disney iO solves the behavioral core of the problem. **80% of parents** reported behavioral improvement, driven by the timer and music.",
                             quote: "The timer changed everything. We went from crying to asking to brush."
                         }
                     }
                 },
                 {
                     id: 'comp_reviews_chart',
-                    title: 'Key Drivers of Success',
+                    title: 'Success Drivers',
                     width: 'half',
-                    visualization: { type: 'bar' },
+                    visualization: { type: 'horizontal_bar' },
                     result: {
                         visualization_data: {
                             items: [
@@ -162,38 +188,7 @@ export default function NotebookView({ content, onAddBlock, onSelectBlock }) {
                                 { name: 'For Sensitive', value: 35 }
                             ]
                         },
-                        narrative: "Gamification elements (timers, music) are the #1 driver of compliance."
-                    }
-                },
-
-                // 7. ROW 5: Growth & Strategy (Chart Left, Text Right)
-                {
-                    id: 'comp_growth_chart',
-                    title: 'Projected Market Penetration',
-                    width: 'half',
-                    visualization: { type: 'line' },
-                    result: {
-                        visualization_data: {
-                            items: content.growthTrend || [
-                                { name: '2022', value: 64 },
-                                { name: '2023', value: 68 },
-                                { name: '2024', value: 73 },
-                                { name: '2025', value: 75 }
-                            ]
-                        },
-                        narrative: "Steady growth projected as the family-based strategy gains traction."
-                    }
-                },
-                {
-                    id: 'comp_strategy_text',
-                    title: 'Strategic Recommendation',
-                    width: 'half',
-                    visualization: { type: 'text' },
-                    result: {
-                        visualization_data: {
-                            content: "### The Family iO Ecosystem\n\nShift from selling a 'child's toothbrush' to selling a **family ritual**. \n\n1. **Game Structure**: Points accumulate for the whole family.\n2. **Modeling**: Parents use their iO brush alongside the child.",
-                            quote: "Children resist orders but respond to systems. A game creates a neutral system that removes the parent as the antagonist."
-                        }
+                        narrative: "Gamification is the most effective lever for changing behavior."
                     }
                 }
             ];
@@ -252,7 +247,49 @@ export default function NotebookView({ content, onAddBlock, onSelectBlock }) {
         handleBlockClick(newId);
     };
 
-    if (!content) return null;
+    if (!content || reportComponents.length === 0) {
+        return (
+            <div className="h-full overflow-y-auto bg-[#FAFAFA] p-6">
+                <div className="max-w-[1400px] mx-auto space-y-6 animate-pulse">
+                    {/* Toolbar Skeleton */}
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-8">
+                        <div className="space-y-2">
+                            <div className="h-6 w-48 bg-slate-200 rounded" />
+                            <div className="h-3 w-32 bg-slate-200 rounded" />
+                        </div>
+                        <div className="flex gap-2">
+                            <div className="h-8 w-24 bg-slate-200 rounded" />
+                            <div className="h-8 w-24 bg-slate-200 rounded" />
+                        </div>
+                    </div>
+
+                    {/* Content Skeleton */}
+                    <div className="space-y-8">
+                        {/* Title */}
+                        <div className="h-12 w-2/3 bg-slate-200 rounded-lg" />
+
+                        {/* Summary */}
+                        <div className="space-y-3">
+                            <div className="h-4 w-full bg-slate-200 rounded" />
+                            <div className="h-4 w-full bg-slate-200 rounded" />
+                            <div className="h-4 w-3/4 bg-slate-200 rounded" />
+                        </div>
+
+                        {/* Grid */}
+                        <div className="grid grid-cols-12 gap-6">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="col-span-6 h-[350px] bg-white rounded-xl border border-slate-100 p-6 flex flex-col gap-4">
+                                    <div className="h-6 w-1/3 bg-slate-200 rounded mb-2" />
+                                    <div className="flex-1 bg-slate-100 rounded-lg" />
+                                    <div className="h-12 w-full bg-slate-50 rounded-lg mt-2 opacity-50" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="h-full overflow-y-auto bg-[#FAFAFA] p-6">
